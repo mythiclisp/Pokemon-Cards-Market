@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import React from 'react'
+import ShoppingCart from '../components/Modals/shopping.jsx'
 
 export default function Home() {
   return (
