@@ -25,6 +25,7 @@ export function signUp(e) {
             signUpForm.reset();
         }).catch(err => {
             alert(err)
+            console.warn(err)
         })
 
     })
@@ -48,12 +49,15 @@ export function logIn(e) {
         const password = logInForm['login-password'].value
 
         //Log the user in with email and password
-        auth.signInWithEmailAndPassword(email, password).then(cred => {
-            // close the signup modal & reset form
+        auth.signInWithEmailAndPassword(email, password).then(() => {
+            //Close the form and reset it's values
             const modal = document.querySelector('#modal-login');
             M.Modal.getInstance(modal).close();
             logInForm.reset();
-        });
+        }).catch(err => {
+            alert(err)
+            console.warn(err)
+        }) 
     })
 }
 
@@ -61,5 +65,12 @@ export function logIn(e) {
 export function signOut() {
 
     //Log user out
-    auth.signOut()
+    console.log('Nope')
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    
+    document.querySelector('.logout-btn').addEventListener('click', () => {
+        auth.signOut()
+    })
+})

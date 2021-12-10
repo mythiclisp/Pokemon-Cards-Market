@@ -1,12 +1,21 @@
 import Layout from '../components/Layout'
 import '../styles/globals.css'
 import '../Scripts/scriptdir.js'
+import React from 'react'
+import Head from 'next/head'
 
 function MyApp({ Component, pageProps }) {
   return (
-    <Layout>
-      <Component {...pageProps} />
-    </Layout>
+    <React.Fragment>
+      <Head>
+        <title>Next App</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+      </Head>
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
+    </React.Fragment>
   )
 } 
 

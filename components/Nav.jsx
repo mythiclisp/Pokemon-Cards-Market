@@ -7,37 +7,44 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { useParams } from 'react-router'
  'react-firebase-hooks'
 
-let loggedIn = false
-
-auth.onAuthStateChanged(user => {
-    if (user === null) return loggedIn = false
-    loggedIn = true
-})
-
 const LoggedInLinks = () => {
 
     const [user] = useAuthState(auth)
 
+    const style = { 
+        display: 'none'
+    }
+
+    function signOut() {
+        auth.signOut()
+    }
+
     return (
         <React.Fragment>
-            <li className='logout-btn' onClick={auth.signOut()}>
-                <Link href="/">Log Out</Link>
+            <li style={user ? null : style} className='logout-btn'>
+                <Link href="/" className='signout-btn' onClick={signOut}>Log Out</Link>
             </li>
         </React.Fragment>
     )
 }
 
 const LoggedOutLinks = () => {
+    
+    const [user] = useAuthState(auth)
+
+    const style = { 
+        display: 'none'
+    }
 
     function sayHi() {
         console.log('Hello World')
     }
     return (
         <React.Fragment>
-            <li data-target='modal-login' className="modal-trigger">
+            <li style={user ? style: null} data-target='modal-login' className="modal-trigger">
                 <Link href="/">Log In</Link>
             </li>
-            <li data-target='modal-signup' className="modal-trigger">
+            <li style={user ? style: null} data-target='modal-signup' className="modal-trigger">
                  <Link href="/">Sign up</Link>
             </li>
         </React.Fragment>
@@ -46,10 +53,12 @@ const LoggedOutLinks = () => {
 
 const Nav = () => {
 
-    const [user] = useAuthState(auth)
-
-    function tellUser() {
-        console.log(user ? 'User detected' : 'User not detected')
+    function signInUser() {
+        const email = 'user1@x.com'
+        const password = 'password'
+        auth.signInWithEmailAndPassword(email,password).then(response => {
+            console.log(user ? `User detected ${user.email}` : 'User not detected')
+        })
     }
 
     return (
@@ -61,8 +70,16 @@ const Nav = () => {
                 <li>
                     <Link href="/about">About</Link>
                 </li>
-                {user ? <LoggedInLinks /> : <LoggedOutLinks />}
-                <button onClick={tellUser}>User??</button>
+                <li>
+                    <Link href="/cards">Cards</Link>
+                </li>
+                <li>
+                    <Link href="/popular">Popular</Link>
+                </li>
+            </ul>
+            <ul className={navStyles.nav_account_actions}>
+                <LoggedOutLinks />
+                <LoggedInLinks />
             </ul>
         </div>
     )

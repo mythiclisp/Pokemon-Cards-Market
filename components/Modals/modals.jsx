@@ -1,6 +1,12 @@
 import React from 'react'
 import modalStyles from '../../styles/Modals.module.css'
-import { logIn, signUp } from '../../Scripts/firebaseauth.js'
+import {logIn, signUp} from '../../Scripts/firebaseauth.js'
+import { auth } from '../../Scripts/firebaseconfig.js'
+
+
+const email = 'user1@x.com'
+const password = 'password'
+
 
 const SignInModal = () => {
 
