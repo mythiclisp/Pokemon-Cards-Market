@@ -1,1 +1,1 @@
-import './firebaseconfig.js'
+import './firebaseauth.js'

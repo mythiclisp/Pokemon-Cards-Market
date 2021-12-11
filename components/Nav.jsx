@@ -1,11 +1,8 @@
-import navStyles from '../styles/Nav.module.css'
+import navStyles from '../css/Nav.module.css'
 import Link from 'next/link'
 import { auth } from '../Scripts/firebaseconfig'
-import { logIn } from '../Scripts/firebaseauth.js'
 import React, { useState } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
-import { useParams } from 'react-router'
- 'react-firebase-hooks'
 
 const LoggedInLinks = () => {
 

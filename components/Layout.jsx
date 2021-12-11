@@ -1,4 +1,4 @@
-import styles from '../styles/Layout.module.css'
+import styles from '../css/Layout.module.css'
 import Nav from '../components/Nav'
 import SignInModal from './Modals/modals'
 

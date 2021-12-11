@@ -1,5 +1,5 @@
 import React from 'react'
-import modalStyles from '../../styles/Modals.module.css'
+import modalStyles from '../../css/Modals.module.css'
 import {logIn, signUp} from '../../Scripts/firebaseauth.js'
 import { auth } from '../../Scripts/firebaseconfig.js'
 
