@@ -7,7 +7,8 @@
     "start": "next start",
     "export": "next export",
     "lint": "next lint",
-    "scss": "node-sass --watch scss -o css"
+    "scss": "node-sass --watch scss -o css",
+    "publish": "npm run build && npm run export && firebase deploy"
   },
   "dependencies": {
     "firebase": "^9.6.0",
