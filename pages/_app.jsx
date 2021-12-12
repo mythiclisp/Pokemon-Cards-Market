@@ -1,6 +1,6 @@
 import Layout from '../components/Layout'
 import '../css/globals.css'
-import '../Scripts/scriptdir.js'
+import '../Scripts/scriptdir.ts'
 import React from 'react'
 import Head from 'next/head'
 

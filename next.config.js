@@ -13,4 +13,5 @@ module.exports = {
     path: '',
   },
   reactStrictMode: true,
+  swcMinify: false
 }

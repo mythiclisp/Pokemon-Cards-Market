@@ -1,12 +1,29 @@
 import navStyles from '../css/Nav.module.css'
 import Link from 'next/link'
-import { auth } from '../Scripts/firebaseconfig'
-import React, { useState } from 'react'
+import React from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
+
+import firebase from 'firebase/compat/app'
+import 'firebase/compat/firestore'
+import 'firebase/compat/auth'
+
+firebase.initializeApp({
+  apiKey: "AIzaSyA2t0HMueSTrkF3KYcRcJoZVQsdqYwVwDE",
+  authDomain: "pokemon-cards-market.firebaseapp.com",
+  projectId: "pokemon-cards-market",
+  storageBucket: "pokemon-cards-market.appspot.com",
+  messagingSenderId: "35885252296",
+  appId: "1:35885252296:web:9e488e3cbfa77780c42ffd",
+  measurementId: "G-KP98M0KWZB"
+})
+
+export const auth = firebase.auth()
+export const db = firebase.firestore()
 
 const LoggedInLinks = () => {
 
     const [user] = useAuthState(auth)
+    
 
     const style = { 
         display: 'none'
@@ -14,10 +31,16 @@ const LoggedInLinks = () => {
 
     function signOut() {
         auth.signOut()
+        console.log('Hello')
     }
 
     return (
         <React.Fragment>
+            <li style={user ? null : style}>
+                <Link href="/" className='signout-btn' onClick={signOut}>
+                    {user ? (user.displayName ? user.displayName : 'No display name') : 'No user'}
+                </Link>
+            </li>
             <li style={user ? null : style} className='logout-btn'>
                 <Link href="/" className='signout-btn' onClick={signOut}>Log Out</Link>
             </li>
@@ -27,6 +50,7 @@ const LoggedInLinks = () => {
 
 const LoggedOutLinks = () => {
     
+
     const [user] = useAuthState(auth)
 
     const style = { 
@@ -75,8 +99,8 @@ const Nav = () => {
                 </li>
             </ul>
             <ul className={navStyles.nav_account_actions}>
-                <LoggedOutLinks />
                 <LoggedInLinks />
+                <LoggedOutLinks />
             </ul>
         </div>
     )

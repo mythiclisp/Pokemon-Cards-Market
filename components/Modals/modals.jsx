@@ -1,12 +1,6 @@
 import React from 'react'
 import modalStyles from '../../css/Modals.module.css'
-import {logIn, signUp} from '../../Scripts/firebaseauth.js'
-import { auth } from '../../Scripts/firebaseconfig.js'
-
-
-const email = 'user1@x.com'
-const password = 'password'
-
+import {logIn, signUp} from '../../Scripts/firebaseauth.ts'
 
 const SignInModal = () => {
 
@@ -22,6 +16,10 @@ const SignInModal = () => {
                 <div className="modal-content">
                     <h4>Sign up</h4><br />
                     <form id="signup-form" onSubmit={handleSubmit}>
+                        <div className="input-field">
+                            <input type="text" id="signup-displayname" required />
+                            <label htmlFor="signup-password">Display Name</label>
+                        </div>
                         <div className="input-field">
                             <input type="email" id="signup-email" required />
                             <label htmlFor="signup-email">Email address</label>
