@@ -38,7 +38,7 @@ const LoggedInLinks = () => {
         <React.Fragment>
             <li data-target='modal-account' className='modal-trigger' style={user ? null : style}>
                 <Link href="/">
-                    {user ? (user.displayName ? user.displayName : 'No display name') : 'No user'}
+                    {user ? user.displayName : 'No display name'}
                 </Link>
             </li>
             <li style={user ? null : style} className='logout-btn'>

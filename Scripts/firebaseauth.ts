@@ -36,10 +36,6 @@ export function signUp(e: any) {
     })
 }
 
-auth.onAuthStateChanged(user => {
-    console.log(user ? `User detected: ${user.displayName}` : 'User not detected')
-})
-
 export function logIn(e: any) {
 
     // Log in form 
@@ -67,12 +63,19 @@ export function logIn(e: any) {
     })
 }
 
+auth.onAuthStateChanged(user => {
+    console.log(user ? `User detected: ${user.displayName}` : 'User not detected')
+})
+
 document.addEventListener('DOMContentLoaded', () => {
+
+    //Initialize materialize components
     const modals: any = document.querySelectorAll('.modal');
     const collapsibles: any = document.querySelectorAll('.collapsible')
     M.Modal.init(modals);
     M.Collapsible.init(collapsibles)
-    
+
+    //Onclick for signout button
     document.querySelector('.logout-btn').addEventListener('click', () => {
         
         auth.signOut()
