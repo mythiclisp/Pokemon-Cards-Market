@@ -36,8 +36,8 @@ const LoggedInLinks = () => {
 
     return (
         <React.Fragment>
-            <li style={user ? null : style}>
-                <Link href="/" className='signout-btn' onClick={signOut}>
+            <li data-target='modal-account' className='modal-trigger' style={user ? null : style}>
+                <Link href="/">
                     {user ? (user.displayName ? user.displayName : 'No display name') : 'No user'}
                 </Link>
             </li>
@@ -73,14 +73,6 @@ const LoggedOutLinks = () => {
 }
 
 const Nav = () => {
-
-    function signInUser() {
-        const email = 'user1@x.com'
-        const password = 'password'
-        auth.signInWithEmailAndPassword(email,password).then(response => {
-            console.log(user ? `User detected ${user.email}` : 'User not detected')
-        })
-    }
 
     return (
         <div className={navStyles.nav}>

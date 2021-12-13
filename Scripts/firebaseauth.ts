@@ -68,8 +68,10 @@ export function logIn(e: any) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    var elems: any = document.querySelectorAll('.modal');
-    M.Modal.init(elems);
+    const modals: any = document.querySelectorAll('.modal');
+    const collapsibles: any = document.querySelectorAll('.collapsible')
+    M.Modal.init(modals);
+    M.Collapsible.init(collapsibles)
     
     document.querySelector('.logout-btn').addEventListener('click', () => {
         
