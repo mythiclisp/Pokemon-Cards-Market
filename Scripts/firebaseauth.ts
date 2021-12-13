@@ -1,7 +1,37 @@
 import { auth } from './firebaseconfig'
 import * as _ from 'lodash'
 
+let errStop = false
+
+function handleErrs(err: Object) {
+    
+    //Stops errors from accumulating
+    errStop = true
+
+    //Checks the type of error
+
+    //Sign in Errors
+    if (err.toLocaleString().includes('auth/email-already-in-use')) return 'Email is already in use'
+    if (err.toLocaleString().includes('auth/invalid-email')) return 'Email adress is not valid'
+    if (err.toLocaleString().includes('auth/operation-not-allowed')) return 'Server under maitenance currently'
+    if (err.toLocaleString().includes('auth/weak-password')) return 'Password is not strong enough'
+    
+    //Log in Errors
+    if (err.toLocaleString().includes('auth/invalid-email')) return 'Email adress is not valid'
+    if (err.toLocaleString().includes('auth/user-disabled')) return 'This account has been disabled'
+    if (err.toLocaleString().includes('auth/user-not-found')) return 'No user is registered under this email'
+    if (err.toLocaleString().includes('auth/wrong-password')) return 'Password is incorrect'
+
+    //General errors
+    if (err.toLocaleString().includes('auth/too-many-requests')) return 'All requests blocked due to unusual activity detected from device'
+
+    //If error is not recognizable
+    else return 'Unknown error'
+}
+
 export function signUp(e: any) {
+
+    if (errStop === true) return
 
     // Sign up form
     const signUpForm = e.target.parentNode
@@ -30,7 +60,8 @@ export function signUp(e: any) {
                 displayName: displayName
             })
         }).catch(err => {
-            console.warn('Sign up error')
+            console.log(err)
+            M.toast({html: handleErrs(err)})
         })
 
     })
@@ -57,8 +88,9 @@ export function logIn(e: any) {
             M.Modal.getInstance(modal).close();
             logInForm.reset();
         }).catch(err => {
-            alert(err)
-            console.warn('Sign in error')
+            console.log(err)
+
+            M.toast({html: handleErrs(err)})
         }) 
     })
 }

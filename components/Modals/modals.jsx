@@ -46,7 +46,7 @@ const SignInModal = () => {
                             <input type="password" id="signup-password" required />
                             <label htmlFor="signup-password">Choose password</label>
                         </div>
-                        <button type='submit' className="btn yellow darken-2 z-depth-0 center-align" onClick={signUp}>Sign up</button>
+                        <button type='submit' className="btn yellow darken-2 z-depth-0 center-align waves-effect waves-green" onClick={signUp}>Sign up</button>
                         <p className="error pink-text center-align"></p>
                     </form>
                 </div>
