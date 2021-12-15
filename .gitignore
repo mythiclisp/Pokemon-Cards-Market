@@ -32,3 +32,6 @@ yarn-error.log*
 
 #Firebase SDK
 /Scripts/firebaseconfig.js
+
+#VSCode setting file
+/.vscode/settings.json

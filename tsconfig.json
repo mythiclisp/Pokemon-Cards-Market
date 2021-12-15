@@ -24,7 +24,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-, "Scripts/firebaseconfig", "Scripts/firebaseauth.js", "components/Modals/modals.jsx", "components/Layout.jsx", "components/Nav.jsx"  ],
+, "Scripts/firebaseconfig", "Scripts/firebaseauth.js", "components/Modals/modals.jsx", "components/Layout.jsx", "components/Nav.jsx", "next.config.js", "pages/index.jsx"  ],
   "exclude": [
     "node_modules"
   ]

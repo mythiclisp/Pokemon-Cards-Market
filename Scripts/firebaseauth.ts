@@ -1,4 +1,4 @@
-import { auth } from './firebaseconfig'
+import { auth, db } from './firebaseconfig'
 import * as _ from 'lodash'
 
 let errStop = false
@@ -21,6 +21,13 @@ function handleErrs(err: Object) {
     if (err.toLocaleString().includes('auth/user-disabled')) return 'This account has been disabled'
     if (err.toLocaleString().includes('auth/user-not-found')) return 'No user is registered under this email'
     if (err.toLocaleString().includes('auth/wrong-password')) return 'Password is incorrect'
+
+    //Signout errors
+    if (err.toLocaleString().includes('auth/invalid-user-token')) return 'User token is invalid'
+    if (err.toLocaleString().includes('auth/user-token-expired')) return 'User token expired'
+    if (err.toLocaleString().includes('auth/null-user')) return 'User is null'
+    if (err.toLocaleString().includes('auth/tenant-id-mismatch')) return 'Tenant ID does not match'
+
 
     //General errors
     if (err.toLocaleString().includes('auth/too-many-requests')) return 'All requests blocked due to unusual activity detected from device'
@@ -101,15 +108,29 @@ auth.onAuthStateChanged(user => {
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    //Initialize materialize components
-    const modals: any = document.querySelectorAll('.modal');
-    const collapsibles: any = document.querySelectorAll('.collapsible')
-    M.Modal.init(modals);
-    M.Collapsible.init(collapsibles)
+    var elems = document.querySelectorAll('.collapsible');
+    M.Collapsible.init(elems);
+
+    var elems = document.querySelectorAll('.modal');
+    M.Modal.init(elems);
 
     //Onclick for signout button
     document.querySelector('.logout-btn').addEventListener('click', () => {
         
-        auth.signOut()
+        auth.signOut().then(() => {
+
+        }).catch(err => {
+            handleErrs(err)
+        })
     })
 })
+export default async function deletePosts() {
+    db.collection('Posts').get().then(posts => {
+        posts.forEach(post => {
+            if (post.id != 'Initial') {
+                db.collection('Posts').doc(post.id).delete()
+                console.log(post.id)
+            }
+        })
+    })
+}

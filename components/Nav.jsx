@@ -2,23 +2,8 @@ import navStyles from '../css/Nav.module.css'
 import Link from 'next/link'
 import React from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
+import { auth } from '../Scripts/firebaseconfig'
 
-import firebase from 'firebase/compat/app'
-import 'firebase/compat/firestore'
-import 'firebase/compat/auth'
-
-firebase.initializeApp({
-  apiKey: "AIzaSyA2t0HMueSTrkF3KYcRcJoZVQsdqYwVwDE",
-  authDomain: "pokemon-cards-market.firebaseapp.com",
-  projectId: "pokemon-cards-market",
-  storageBucket: "pokemon-cards-market.appspot.com",
-  messagingSenderId: "35885252296",
-  appId: "1:35885252296:web:9e488e3cbfa77780c42ffd",
-  measurementId: "G-KP98M0KWZB"
-})
-
-export const auth = firebase.auth()
-export const db = firebase.firestore()
 
 const LoggedInLinks = () => {
 
@@ -31,11 +16,13 @@ const LoggedInLinks = () => {
 
     function signOut() {
         auth.signOut()
-        console.log('Hello')
     }
 
     return (
         <React.Fragment>
+            <li data-target='modal-createpost' className='modal-trigger' style={user ? null : style}>
+                <Link href="/">Create Post</Link>
+            </li>
             <li data-target='modal-account' className='modal-trigger' style={user ? null : style}>
                 <Link href="/">
                     {user ? user.displayName : 'No display name'}
