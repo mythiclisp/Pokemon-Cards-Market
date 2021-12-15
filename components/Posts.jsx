@@ -1,22 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import PostStyles from '../css/Posts.module.css'
-import { returnPostsHTML } from '../Scripts/firebasedb.tsx'
-import { useRoutes } from 'react-router'
+import { getPosts } from '../Scripts/firebasedb.ts'
+import { addPosts } from '../Scripts/firebasedb'
 
 const Posts = () => {
 
-    let [postsHTML, setPostsHTML] = useState([])
-
-    function startInterval() {
-        setInterval(() => {
-
-            console.log('Hi')
-        
-            setPostsHTML(postsHTML = '')
-        },1000)
-    }
-
-    startInterval()
+    let [postsHTML] = useState([])
 
     useEffect(() => {
         console.log('reloaded')
@@ -25,29 +14,9 @@ const Posts = () => {
         addPosts()
     })
 
-    function addPosts() {
-
-
-        returnPostsHTML.then(response => {
-
-            document.querySelector('.posts-container').innerHTML = ''
-    
-            response.forEach(post => {
-                
-                document.querySelector('.posts-container').innerHTML += `
-                <li>
-                    <div class="collapsible-header">${post.data().header}</div>
-                    <div class="collapsible-body">${post.data().description}</div>
-                </li>
-                `
-            });
-    
-        })
-    }
-
     return (
         <React.Fragment>
-            <ul className="collapsible posts-container">
+            <ul className={`collapsible posts-container ${PostStyles.posts_container}`}>
                 {postsHTML}
             </ul>
         </React.Fragment>

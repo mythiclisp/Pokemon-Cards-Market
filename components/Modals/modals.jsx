@@ -3,6 +3,8 @@ import modalStyles from '../../css/Modals.module.css'
 import {logIn, signUp} from '../../Scripts/firebaseauth.ts'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth, db } from '../../Scripts/firebaseconfig'
+import {sendPasswordReset, changeDisplayName, createPost} from '../../Scripts/firebaseauth'
+import { addPosts } from '../Posts'
 
 const SignInModal = () => {
 
@@ -12,37 +14,6 @@ const SignInModal = () => {
         
         //Prevent Page reload
         e.preventDefault()
-    }
-
-    const sendPasswordReset = e => {
-        const email = e.target.parentNode.children[0].children[0].value
-        auth.sendPasswordResetEmail(email).then(response => {
-            console.log(response)
-        })
-    }
-
-    const changeDisplayName = e => {
-        const proposedDisplayName = e.target.parentNode.children[1].value
-        auth.currentUser.updateProfile({
-            displayName: proposedDisplayName
-        })
-    }
-
-    const createPost = e => {
-        const postHeader = e.target.parentNode['post-header'].value
-        const postBody = e.target.parentNode['post-body'].value
-        const postPrice = e.target.parentNode['post-price'].value
-
-        db.collection('Posts').add({
-            description: postBody,
-            header: postHeader,
-            image: 'image url',
-            price: postPrice,
-            user: 'mythiclisp'
-        }).then(() => {
-            const modal = document.querySelector('#modal-createpost');
-            M.Modal.getInstance(modal).close();
-        })
     }
 
     return (

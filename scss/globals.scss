@@ -14,3 +14,15 @@ a {
 *, *::before, *::after {
   box-sizing: border-box;
 }
+.prompts-container {
+  height: 30vh;
+  width: 50%;
+  display: grid;
+  place-items: center;
+  grid-auto-flow: column;
+}
+.border-break {
+  height: 3px;
+  width: 70%;
+  background: #aaa;
+}

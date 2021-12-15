@@ -1,9 +1,10 @@
 import { auth, db } from './firebaseconfig'
 import * as _ from 'lodash'
+import { addPosts } from './firebasedb'
 
 let errStop = false
 
-function handleErrs(err: Object) {
+export function handleErrs(err: Object) {
     
     //Stops errors from accumulating
     errStop = true
@@ -28,6 +29,12 @@ function handleErrs(err: Object) {
     if (err.toLocaleString().includes('auth/null-user')) return 'User is null'
     if (err.toLocaleString().includes('auth/tenant-id-mismatch')) return 'Tenant ID does not match'
 
+    //Password reset email errors
+    if (err.toLocaleString().includes('auth/invalid-email')) return 'Email adress is not valid'
+    if (err.toLocaleString().includes('auth/missing-continue-uri')) return 'No continue URI was provided in the request'
+    if (err.toLocaleString().includes('auth/invalid-continue-uri')) return 'URL in request is invalid'
+    if (err.toLocaleString().includes('auth/unauthorized-continue-uri')) return 'The domain of the URL is not valid'
+    if (err.toLocaleString().includes('auth/user-not-found')) return 'No user with corrosponding email adress'
 
     //General errors
     if (err.toLocaleString().includes('auth/too-many-requests')) return 'All requests blocked due to unusual activity detected from device'
@@ -67,7 +74,7 @@ export function signUp(e: any) {
                 displayName: displayName
             })
         }).catch(err => {
-            console.log(err)
+
             M.toast({html: handleErrs(err)})
         })
 
@@ -95,16 +102,69 @@ export function logIn(e: any) {
             M.Modal.getInstance(modal).close();
             logInForm.reset();
         }).catch(err => {
-            console.log(err)
 
             M.toast({html: handleErrs(err)})
         }) 
     })
 }
 
-auth.onAuthStateChanged(user => {
-    console.log(user ? `User detected: ${user.displayName}` : 'User not detected')
-})
+//Create post
+export const createPost = (e: any) => {
+    const postHeader = e.target.parentNode['post-header'].value
+    const postBody = e.target.parentNode['post-body'].value
+    const postPrice = e.target.parentNode['post-price'].value
+
+    db.collection('Posts').add({
+        description: postBody,
+        header: postHeader,
+        image: 'image url',
+        price: postPrice,
+        user: 'mythiclisp'
+    }).then(() => {
+
+        const modal = document.querySelector('#modal-createpost');
+        M.Modal.getInstance(modal).close();
+        addPosts()
+
+        M.toast({html: 'Post succesfully created'})
+    }).catch(() => {
+
+        M.toast({html: 'Post could not be created'})
+    })
+}
+
+//Send password reset email
+export const sendPasswordReset = (e: any) => {
+
+    //Get the email
+    const email = e.target.parentNode.children[0].children[0].value
+    
+    //Send password reset email
+    auth.sendPasswordResetEmail(email).then(() => {
+
+        M.toast({html: 'Email sent sucessfully'})
+    }).catch(err => {
+        M.toast({html: handleErrs(err)})
+    })
+}
+
+//Change display name
+export const changeDisplayName = (e: any) => {
+
+    //Get proposed display name
+    const proposedDisplayName = e.target.parentNode.children[1].value
+
+    //Update display name
+    auth.currentUser.updateProfile({
+
+        displayName: proposedDisplayName
+    }).then(() => {
+
+        M.toast({html: 'Display name sucessfully changed'})
+    }).catch(err => {
+        M.toast({html: 'Error occured while changing display name'})
+    })
+}
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -113,6 +173,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     var elems = document.querySelectorAll('.modal');
     M.Modal.init(elems);
+
+    M.AutoInit()
 
     //Onclick for signout button
     document.querySelector('.logout-btn').addEventListener('click', () => {
@@ -124,13 +186,4 @@ document.addEventListener('DOMContentLoaded', () => {
         })
     })
 })
-export default async function deletePosts() {
-    db.collection('Posts').get().then(posts => {
-        posts.forEach(post => {
-            if (post.id != 'Initial') {
-                db.collection('Posts').doc(post.id).delete()
-                console.log(post.id)
-            }
-        })
-    })
-}
+
