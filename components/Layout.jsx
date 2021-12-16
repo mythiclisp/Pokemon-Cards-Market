@@ -6,7 +6,6 @@ import loadAnimation from '../Scripts/Animations/main'
 
 const Layout = ({children}) => {
 
-
     useEffect(() => {
         
     })

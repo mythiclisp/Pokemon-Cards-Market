@@ -1,2 +1,12 @@
 .posts_container {
   width: 100%; }
+
+.post_header {
+  width: 100%; }
+
+.post_header_content {
+  width: 50%; }
+
+.post_price_content {
+  width: 50%;
+  text-align: right; }

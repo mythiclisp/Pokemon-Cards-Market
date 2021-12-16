@@ -118,7 +118,7 @@ export const createPost = (e: any) => {
         header: postHeader,
         image: 'image url',
         price: postPrice,
-        user: 'mythiclisp'
+        user: auth.currentUser.displayName
     }).then(() => {
 
         const modal = document.querySelector('#modal-createpost');

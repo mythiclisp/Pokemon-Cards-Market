@@ -1,54 +1,30 @@
-import Head from 'next/head'
-import Image from 'next/image'
+import { initial } from 'lodash'
 import React from 'react'
-import Posts from '../components/Posts.jsx'
+import { useEffect, useState } from 'react/cjs/react.development'
+import Posts from '../components/Posts'
 import { auth } from '../Scripts/firebaseconfig'
 import { useAuthState } from 'react-firebase-hooks/auth'
-import { deletePosts } from '../Scripts/firebasedb'
 
-export default function Home() {
-  const [user] = useAuthState(auth)
 
-  return (
-    <React.Fragment>
-      <h1>Home</h1>
-      {user ? (user.email === 'theonlybaconsandwich@gmail.com' ? 
-      <React.Fragment>
-        <h3>Admin Actions: </h3>
-        <div className="container center-align prompts-container">
-          <button className='btn-large pulse green waves-effect' onClick={deletePosts}>
-            Delete all posts
-          </button>
-        </div>
-        <div className='border-break'></div>
-      </React.Fragment> :
-      null) : null
-      }
-      <div className="container center-align prompts-container">
-        {user ? 
-        <button className='btn-large pulse yellow waves-effect modal-trigger' data-target='modal-creatpost'>
-          Create a post
-        </button> : 
+const Home = () => {
+
+    const [user] = useAuthState(auth)
+
+    return (
         <React.Fragment>
-          <div className="row">
-            <div className="col s1">
-              <button className='btn-large pulse purple waves-effect modal-trigger' data-target='modal-login'>
-                Login
-              </button>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col s1">
-              <button className='btn-large pulse teal waves-effect modal-trigger' data-target='modal-signup'>
-                Signup
-              </button>
-            </div>
-          </div>
-        </React.Fragment>}
-
-      </div>
-      <h3>Posts</h3>
-      <Posts />
-    </React.Fragment>
-  )
+            <h1>Cards</h1>
+            {user ? 
+            <React.Fragment>
+                <h3>Popular</h3>
+                <Posts />
+                <h3>Trending</h3>
+                <Posts />
+                <h3>Recomended</h3>
+                <Posts />
+            </React.Fragment>
+            : <h3>Please log in or sign up</h3>}
+        </React.Fragment>
+    )
 }
+
+export default Home

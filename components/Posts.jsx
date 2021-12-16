@@ -30,8 +30,18 @@ const Posts = () => {
 
                 if (post.id != 'Initial') {
                     postHTMLList.push(
-                        <li key={Math.random()}>
-                            <div className="collapsible-header">{post.data().header}</div>
+                        <li key={Math.random()} className={PostStyles.post}>
+                            <div className={`collapsible-header ${PostStyles.post_header}`}>
+                                <div className={PostStyles.post_header_content} style={{float: 'left'}}>
+                                    {`${post.data().header} by `}
+                                    <span style={{fontWeight: 'bold'}}>
+                                        {post.data().user}
+                                    </span>
+                                </div>
+                                <div className={PostStyles.post_price_content}>
+                                    {`$${post.data().price}`}
+                                </div>
+                            </div>
                             <div className="collapsible-body">{post.data().description}</div>
                         </li>)
                 }

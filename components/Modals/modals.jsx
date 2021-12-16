@@ -1,10 +1,8 @@
 import React from 'react'
-import modalStyles from '../../css/Modals.module.css'
-import {logIn, signUp} from '../../Scripts/firebaseauth.ts'
+import {logIn, signUp} from '../../Scripts/firebaseauth'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth, db } from '../../Scripts/firebaseconfig'
 import {sendPasswordReset, changeDisplayName, createPost} from '../../Scripts/firebaseauth'
-import { addPosts } from '../Posts'
 
 const SignInModal = () => {
 
