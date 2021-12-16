@@ -6,6 +6,7 @@ module.exports = {
     return {
       "/": { page: "/" },
       "/about": { page: "/about" },
+      "/cards": { page: "/cards"}
     };
   },
   images: {

@@ -8,13 +8,12 @@ const Posts = () => {
 
     let [postHTML, setPostHTML] = useState([])
 
-
-    
     useEffect(() => {
-        console.log('reloaded')
+
+        //Re-init posts
         let collapsibleElems = document.querySelectorAll('.collapsible')
         M.Collapsible.init(collapsibleElems)
-    })
+    }, [postHTML])
 
     useEffect(() => {
 
@@ -22,18 +21,23 @@ const Posts = () => {
 
             let i = 0
 
+            let postHTMLList = []
+
             posts.forEach((post) => {
+
 
                 i++
 
                 if (post.id != 'Initial') {
-                    setPostHTML(postHTML.concat(
+                    postHTMLList.push(
                         <li key={Math.random()}>
                             <div className="collapsible-header">{post.data().header}</div>
                             <div className="collapsible-body">{post.data().description}</div>
-                        </li>))
+                        </li>)
                 }
             })
+
+            setPostHTML(postHTML.concat(postHTMLList))
         })
     }, [])
 

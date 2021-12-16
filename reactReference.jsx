@@ -9,6 +9,12 @@
 //certain state or states.
 
 
+//useLayoutEffect() is similar to useEffect(), except it
+//is ran before the DOM is rendered and is a 
+//synchronous function, so the DOM will wait until it's
+//finished
+
+
 //useMemo() caches a function so that i will only be updated 
 //when a certain state or states changes. When using 
 //useEffect() for certain states that are object types, 

@@ -26,7 +26,7 @@ export default function Home() {
       }
       <div className="container center-align prompts-container">
         {user ? 
-        <button className='btn-large pulse yellow waves-effect modal-trigger' data-target='modal-creatpost'>
+        <button className='btn-large pulse yellow waves-effect modal-trigger' data-target='modal-createpost'>
           Create a post
         </button> : 
         <React.Fragment>
