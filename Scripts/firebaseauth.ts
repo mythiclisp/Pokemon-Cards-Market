@@ -1,6 +1,5 @@
 import { auth, db } from './firebaseconfig'
 import * as _ from 'lodash'
-import { addPosts } from './firebasedb'
 
 let errStop = false
 
@@ -124,7 +123,6 @@ export const createPost = (e: any) => {
 
         const modal = document.querySelector('#modal-createpost');
         M.Modal.getInstance(modal).close();
-        addPosts()
 
         M.toast({html: 'Post succesfully created'})
     }).catch(() => {

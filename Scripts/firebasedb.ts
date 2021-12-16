@@ -16,42 +16,6 @@ export const getPosts = (resolve: Function, reject: Function) => {
     }) 
 }
 
-export async function addPosts() {
-
-    new Promise((resolve, reject) => {
-
-        getPosts(resolve, reject)
-
-    }).then((response: any) => {
-
-        document.querySelectorAll('.posts-container').forEach(postContainer => {
-
-            postContainer.innerHTML = ''
-        })
-
-
-        response.forEach((post: any) => {
-
-            const postContainers: NodeListOf<Element> = document.querySelectorAll('.posts-container')
-            postContainers.forEach((postContainer: HTMLElement) => {
-                
-                loadHTML(postContainer, post)
-            })
-        });
-
-    })
-}
-
-function loadHTML(postContainer: any, post: any) {
-
-    postContainer.innerHTML += `
-    <li class='collapsible-item'>
-        <div class="collapsible-header">${post.data().header}</div>
-        <div class="collapsible-body">${post.data().description}</div>
-    </li>
-    `
-}
-
 export async function deletePosts() {
 
     db.collection('Posts').get().then(posts => {
@@ -65,7 +29,6 @@ export async function deletePosts() {
 
             M.toast({html: 'Deleted all posts'})
 
-            addPosts()
         })
 
     }).catch(err => {

@@ -2,7 +2,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import React from 'react'
 import Posts from '../components/Posts.jsx'
-import { auth } from '../Scripts/firebaseconfig.ts'
+import { auth } from '../Scripts/firebaseconfig'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { deletePosts } from '../Scripts/firebasedb'
 

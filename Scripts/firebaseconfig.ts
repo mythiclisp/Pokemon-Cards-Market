@@ -12,5 +12,5 @@ firebase.initializeApp({
   measurementId: "G-KP98M0KWZB"
 })
 
-export const auth = firebase.auth()
-export const db = firebase.firestore()
+export const auth: any = firebase.auth()
+export const db: any = firebase.firestore()

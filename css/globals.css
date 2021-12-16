@@ -22,3 +22,18 @@ a {
   height: 3px;
   width: 70%;
   background: #aaa; }
+  @import url("https://use.typekit.net/jmk3xov.css");
+
+canvas {
+position: absolute;
+top: 0;
+bottom: 0;
+left: 0;
+right: 0;
+}
+
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
