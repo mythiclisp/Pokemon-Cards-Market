@@ -1,10 +1,24 @@
 import Layout from '../components/Layout'
 import '../css/globals.css'
 import '../Scripts/scriptdir.ts'
-import React from 'react'
+import setLocalStorage from '../Scripts/localStorage'
+import { returnRates } from '../Scripts/currency'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import React, { useEffect } from 'react'
 import Head from 'next/head'
+import { auth } from '../Scripts/firebaseconfig'
 
 function MyApp({ Component, pageProps }) {
+
+  const [user] = useAuthState(auth)
+
+  useEffect(() => {
+    if (user) {
+      setLocalStorage()
+      returnRates()
+    }
+  },[user])
+
   return (
     <React.Fragment>
       <Head>
@@ -18,6 +32,6 @@ function MyApp({ Component, pageProps }) {
       </Layout>
     </React.Fragment>
   )
-} 
+}
 
 export default MyApp

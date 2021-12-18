@@ -8,9 +8,9 @@ import { auth } from '../Scripts/firebaseconfig'
 const LoggedInLinks = () => {
 
     const [user] = useAuthState(auth)
-    
 
-    const style = { 
+
+    const style = {
         display: 'none'
     }
 
@@ -25,7 +25,7 @@ const LoggedInLinks = () => {
             </li>
             <li data-target='modal-account' className='modal-trigger' style={user ? null : style}>
                 <Link href="/">
-                    {user ? user.displayName : 'No display name'}
+                    {user ? (user.displayName ? user.displayName : 'No display name') : ''}
                 </Link>
             </li>
             <li style={user ? null : style} className='logout-btn'>
@@ -36,11 +36,11 @@ const LoggedInLinks = () => {
 }
 
 const LoggedOutLinks = () => {
-    
+
 
     const [user] = useAuthState(auth)
 
-    const style = { 
+    const style = {
         display: 'none'
     }
 

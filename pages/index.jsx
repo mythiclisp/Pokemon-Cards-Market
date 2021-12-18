@@ -2,12 +2,13 @@ import Head from 'next/head'
 import Image from 'next/image'
 import React from 'react'
 import Posts from '../components/Posts.jsx'
-import { auth } from '../Scripts/firebaseconfig'
+import { auth, functions } from '../Scripts/firebaseconfig'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { deletePosts } from '../Scripts/firebasedb'
 
 export default function Home() {
   const [user] = useAuthState(auth)
+
 
   return (
     <React.Fragment>

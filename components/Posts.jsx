@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import PostStyles from '../css/Posts.module.css'
 import { db } from '../Scripts/firebaseconfig'
+import { returnRates } from '../Scripts/currency'
 
 const Posts = () => {
 
@@ -11,6 +12,7 @@ const Posts = () => {
     useEffect(() => {
 
         //Re-init posts
+
         let collapsibleElems = document.querySelectorAll('.collapsible')
         M.Collapsible.init(collapsibleElems)
     }, [postHTML])
@@ -25,29 +27,39 @@ const Posts = () => {
 
             posts.forEach((post) => {
 
+                let price = post.data().price
 
-                i++
+                returnRates().then(response => {
+                    console.log(response.rate)
+                    console.log(parseFloat(price))
+                    price = Math.round(response.rate * parseFloat(price) * 100) /100
+                    const symbol = response.symbol
+                    i++
 
-                if (post.id != 'Initial') {
-                    postHTMLList.push(
-                        <li key={Math.random()} className={PostStyles.post}>
-                            <div className={`collapsible-header ${PostStyles.post_header}`}>
-                                <div className={PostStyles.post_header_content} style={{float: 'left'}}>
-                                    {`${post.data().header} by `}
-                                    <span style={{fontWeight: 'bold'}}>
-                                        {post.data().user}
-                                    </span>
+                    if (post.id != 'Initial') {
+                        postHTMLList.push(
+                            <li key={Math.random()} className={PostStyles.post}>
+                                <div className={`collapsible-header ${PostStyles.post_header}`}>
+                                    <div className={PostStyles.post_header_content} style={{float: 'left'}}>
+                                        {`${post.data().header} by `}
+                                        <span style={{fontWeight: 'bold'}}>
+                                            {post.data().user}
+                                        </span>
+                                    </div>
+                                    <div className={PostStyles.post_price_content}>
+                                        {`${symbol}${price}`}
+                                    </div>
                                 </div>
-                                <div className={PostStyles.post_price_content}>
-                                    {`$${post.data().price}`}
-                                </div>
-                            </div>
-                            <div className="collapsible-body">{post.data().description}</div>
-                        </li>)
-                }
+                                <div className="collapsible-body">{post.data().description}</div>
+                            </li>)
+                            setPostHTML(postHTML.concat(postHTMLList))
+
+                    }
+
+                })
             })
 
-            setPostHTML(postHTML.concat(postHTMLList))
+
         })
     }, [])
 

@@ -8,29 +8,45 @@
     "export": "next export",
     "lint": "next lint",
     "scss": "node-sass --watch scss -o css",
-    "publish": "npm run build && npm run export && firebase deploy"
+    "publish": "npm run build && npm run export && firebase deploy",
+    "deploy-functions": "firebase deploy --only functions"
   },
   "dependencies": {
+    "axios": "^0.24.0",
+    "cheerio": "^1.0.0-rc.10",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "firebase": "^9.6.1",
     "firebase-tools": "^9.23.1",
+    "fs": "^0.0.1-security",
+    "get-urls": "^10.0.1",
     "lodash": "^4.17.21",
     "materialize-css": "^1.0.0",
+    "net": "^1.0.2",
     "next": "^12.0.8-canary.4",
+    "nodemon": "^2.0.15",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-firebase-hooks": "^4.0.1",
+    "request": "^2.88.2",
     "response": "^0.18.0",
     "send": "^0.17.2",
-    "three": "^0.135.0"
+    "three": "^0.135.0",
+    "tls": "^0.0.1"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.178",
     "@types/materialize-css": "^1.0.11",
     "@types/react": "^17.0.37",
+    "@types/request": "^2.48.7",
     "eslint": "8.4.1",
     "eslint-config-next": "12.0.7",
     "webpack": "^5.65.0",
     "webpack-cli": "^4.9.1"
+  },
+  "browser": {
+    "fs": false,
+    "path": false,
+    "os": false
   }
 }

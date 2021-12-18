@@ -1,10 +1,11 @@
-import { auth, db } from './firebaseconfig'
+import { auth, db, functions } from './firebaseconfig'
+import { returnRates } from './currency'
 import * as _ from 'lodash'
 
 let errStop = false
 
 export function handleErrs(err: Object) {
-    
+
     //Stops errors from accumulating
     errStop = true
 
@@ -15,7 +16,7 @@ export function handleErrs(err: Object) {
     if (err.toLocaleString().includes('auth/invalid-email')) return 'Email adress is not valid'
     if (err.toLocaleString().includes('auth/operation-not-allowed')) return 'Server under maitenance currently'
     if (err.toLocaleString().includes('auth/weak-password')) return 'Password is not strong enough'
-    
+
     //Log in Errors
     if (err.toLocaleString().includes('auth/invalid-email')) return 'Email adress is not valid'
     if (err.toLocaleString().includes('auth/user-disabled')) return 'This account has been disabled'
@@ -59,6 +60,7 @@ export function signUp(e: any) {
         const displayName: string = signUpForm['signup-displayname'].value
         const email: string = signUpForm['signup-email'].value;
         const password: string = signUpForm['signup-password'].value;
+        const currency: string = signUpForm['currency'].value.substring(0,3)
 
         auth.createUserWithEmailAndPassword(email, password).then(response => {
 
@@ -67,6 +69,9 @@ export function signUp(e: any) {
             M.Modal.getInstance(modal).close();
             signUpForm.reset()
 
+            db.collection('Users').doc(email).set({
+                currency: currency
+            })
             //Set the display name
             return response.user.updateProfile({
 
@@ -82,7 +87,7 @@ export function signUp(e: any) {
 
 export function logIn(e: any) {
 
-    // Log in form 
+    // Log in form
     const logInForm = e.target.parentNode
 
     //When submitted
@@ -95,7 +100,7 @@ export function logIn(e: any) {
 
         //Log the user in with email and password
         auth.signInWithEmailAndPassword(email, password).then(() => {
-            
+
             //Close the form and reset it's values
             const modal: HTMLElement = document.querySelector('#modal-login');
             M.Modal.getInstance(modal).close();
@@ -103,31 +108,35 @@ export function logIn(e: any) {
         }).catch(err => {
 
             M.toast({html: handleErrs(err)})
-        }) 
+        })
     })
 }
 
 //Create post
 export const createPost = (e: any) => {
-    const postHeader = e.target.parentNode['post-header'].value
-    const postBody = e.target.parentNode['post-body'].value
-    const postPrice = e.target.parentNode['post-price'].value
+    returnRates().then((response: any) => {
+        const postHeader = e.target.parentNode['post-header'].value
+        const postBody = e.target.parentNode['post-body'].value
+        const postPrice = parseInt(e.target.parentNode['post-price'].value) / response.rate
+        console.log(response.rate)
+        console.log(parseInt(e.target.parentNode['post-price'].value))
 
-    db.collection('Posts').add({
-        description: postBody,
-        header: postHeader,
-        image: 'image url',
-        price: postPrice,
-        user: auth.currentUser.displayName
-    }).then(() => {
+        db.collection('Posts').add({
+            description: postBody,
+            header: postHeader,
+            image: 'image url',
+            price: postPrice,
+            user: auth.currentUser.displayName
+        }).then(() => {
 
-        const modal = document.querySelector('#modal-createpost');
-        M.Modal.getInstance(modal).close();
+            const modal = document.querySelector('#modal-createpost');
+            M.Modal.getInstance(modal).close();
 
-        M.toast({html: 'Post succesfully created'})
-    }).catch(() => {
+            M.toast({html: 'Post succesfully created'})
+        }).catch(() => {
 
-        M.toast({html: 'Post could not be created'})
+            M.toast({html: 'Post could not be created'})
+        })
     })
 }
 
@@ -136,7 +145,7 @@ export const sendPasswordReset = (e: any) => {
 
     //Get the email
     const email = e.target.parentNode.children[0].children[0].value
-    
+
     //Send password reset email
     auth.sendPasswordResetEmail(email).then(() => {
 
@@ -164,6 +173,22 @@ export const changeDisplayName = (e: any) => {
     })
 }
 
+//Change currency
+export const changeCurrency = (e: any) => {
+
+    //Get proposed currency
+    const proposedCurrency = e.target.parentNode.children[0].children[0].value.substring(0,3)
+    console.log(proposedCurrency)
+
+    //Set the value in the db
+    db.collection('Users').doc(auth.currentUser.email).set({
+
+        currency: proposedCurrency
+    })
+
+    M.toast({html: `Successfully changed currency to ${proposedCurrency}`})
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 
     var elems = document.querySelectorAll('.collapsible');
@@ -176,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //Onclick for signout button
     document.querySelector('.logout-btn').addEventListener('click', () => {
-        
+
         auth.signOut().then(() => {
 
         }).catch(err => {
@@ -184,4 +209,3 @@ document.addEventListener('DOMContentLoaded', () => {
         })
     })
 })
-
