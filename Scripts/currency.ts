@@ -28,12 +28,19 @@ export default async function getRates(currency:string) {
         }
     })
 }
-export async function returnRates() {
+export async function returnRates(user) {
 
     return new Promise ((resolve, reject) => {
-        const currentCurency = JSON.parse(window.localStorage.getItem(auth.currentUser.email)).currency
-        getRates(currentCurency).then(JSON => {
-            resolve(JSON)
-        })
+
+        if (user != null) {
+
+            const currentCurency = JSON.parse(window.localStorage.getItem(auth.currentUser.email)).currency
+            getRates(currentCurency).then(JSON => {
+
+                resolve(JSON)
+            })
+        } else {
+            resolve({symbol: 'USD $', rate: 1})
+        }
     })
 }

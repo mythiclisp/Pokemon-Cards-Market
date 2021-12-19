@@ -13,7 +13,7 @@ export default function Home() {
   return (
     <React.Fragment>
       <h1>Home</h1>
-      {user ? (user.email === 'theonlybaconsandwich@gmail.com' ? 
+      {user ? (user.email === 'theonlybaconsandwich@gmail.com' ?
       <React.Fragment>
         <h3>Admin Actions: </h3>
         <div className="container center-align prompts-container">
@@ -26,10 +26,10 @@ export default function Home() {
       null) : null
       }
       <div className="container center-align prompts-container">
-        {user ? 
+        {user ?
         <button className='btn-large pulse yellow waves-effect modal-trigger' data-target='modal-createpost'>
           Create a post
-        </button> : 
+        </button> :
         <React.Fragment>
           <div className="row">
             <div className="col s1">
@@ -49,7 +49,7 @@ export default function Home() {
 
       </div>
       <h3>Posts</h3>
-      <Posts />
+      <Posts maxLength={7} currency={'dynamic'}/>
     </React.Fragment>
   )
 }

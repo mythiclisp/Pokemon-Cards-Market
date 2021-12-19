@@ -1,4 +1,4 @@
-import { auth, db, functions } from './firebaseconfig'
+import { auth, db, functions, storage } from './firebaseconfig'
 import { returnRates } from './currency'
 import * as _ from 'lodash'
 
@@ -113,18 +113,24 @@ export function logIn(e: any) {
 }
 
 //Create post
-export const createPost = (e: any) => {
-    returnRates().then((response: any) => {
+export const createPost = async (e: any) => {
+
+    //Putting post image in storage bucket
+    const postImage = e.target.parentNode['post-image'].files[0]
+    const storageRef = storage.ref()
+    const fileRef = storageRef.child(postImage.name)
+    await fileRef.put(postImage)
+    const fileURL = await fileRef.getDownloadURL()
+
+    returnRates(auth.currentUser).then((response: any) => {
         const postHeader = e.target.parentNode['post-header'].value
         const postBody = e.target.parentNode['post-body'].value
         const postPrice = parseInt(e.target.parentNode['post-price'].value) / response.rate
-        console.log(response.rate)
-        console.log(parseInt(e.target.parentNode['post-price'].value))
 
         db.collection('Posts').add({
             description: postBody,
             header: postHeader,
-            image: 'image url',
+            image: fileURL,
             price: postPrice,
             user: auth.currentUser.displayName
         }).then(() => {

@@ -1,4 +1,4 @@
-import { auth, db } from "./firebaseconfig";
+import { auth, db } from "../firebaseconfig";
 
 export default async function setLocalStorage() {
 

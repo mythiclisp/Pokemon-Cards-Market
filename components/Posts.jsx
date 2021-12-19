@@ -1,13 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react'
 import PostStyles from '../css/Posts.module.css'
-import { db } from '../Scripts/firebaseconfig'
+import { auth, db } from '../Scripts/firebaseconfig'
 import { returnRates } from '../Scripts/currency'
+import { useAuthState } from 'react-firebase-hooks/auth'
 
-const Posts = () => {
+const Posts = ({ maxLength, currency }) => {
 
     let loadingPostsRefs = useRef()
 
     let [postHTML, setPostHTML] = useState([])
+
+    const [user] = useAuthState(auth)
 
     useEffect(() => {
 
@@ -27,41 +30,44 @@ const Posts = () => {
 
             posts.forEach((post) => {
 
-                let price = post.data().price
+                i++
+                if (i < maxLength + 2) {
 
-                returnRates().then(response => {
-                    console.log(response.rate)
-                    console.log(parseFloat(price))
-                    price = Math.round(response.rate * parseFloat(price) * 100) /100
-                    const symbol = response.symbol
-                    i++
+                    returnRates(user).then(response => {
+                        let price = Math.round(post.data().price * 100)/100
+                        let calcPrice = Math.round(response.rate * parseFloat(price) * 100) /100
+                        const symbol = response.symbol
+                        setPostHTML(postHTML.concat())
 
-                    if (post.id != 'Initial') {
-                        postHTMLList.push(
-                            <li key={Math.random()} className={PostStyles.post}>
-                                <div className={`collapsible-header ${PostStyles.post_header}`}>
-                                    <div className={PostStyles.post_header_content} style={{float: 'left'}}>
-                                        {`${post.data().header} by `}
-                                        <span style={{fontWeight: 'bold'}}>
-                                            {post.data().user}
-                                        </span>
+                        if (post.id != 'Initial') {
+
+                            postHTMLList.push(
+                                <li key={Math.random()} className={PostStyles.post}>
+                                    <div className={`collapsible-header ${PostStyles.post_header}`}>
+                                        <div className={PostStyles.post_header_content} style={{float: 'left'}}>
+                                            {`${post.data().header} by `}
+                                            <span style={{fontWeight: 'bold'}}>
+                                                {post.data().user}
+                                            </span>
+                                        </div>
+                                        <div className={PostStyles.post_price_content}>
+                                            {`${symbol}${calcPrice}`}
+                                        </div>
                                     </div>
-                                    <div className={PostStyles.post_price_content}>
-                                        {`${symbol}${price}`}
+                                    <div className="collapsible-body">
+                                        <img src={post.data().image} alt="Post image" style={{width: '60%'}}/>
+                                        {`${post.data().description}`}
                                     </div>
-                                </div>
-                                <div className="collapsible-body">{post.data().description}</div>
-                            </li>)
-                            setPostHTML(postHTML.concat(postHTMLList))
+                                </li>)
+                                setPostHTML(postHTML.concat(postHTMLList))
 
-                    }
+                        }
 
-                })
+                    })
+                }
             })
-
-
         })
-    }, [])
+    }, [user])
 
     return (
         <React.Fragment>
