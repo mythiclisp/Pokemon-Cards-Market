@@ -11,3 +11,20 @@
     width: 50%;
     text-align: right;
 }
+.post_body_left {
+    display: grid;
+    grid-template-rows: 20% 80%;
+    width: 100%;
+}
+.post_body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+.post_body_header {
+    font-weight: bold;
+    font-size: 3rem;
+}
+.post_body_left{
+    width: 100%;
+    display: grid;
+}

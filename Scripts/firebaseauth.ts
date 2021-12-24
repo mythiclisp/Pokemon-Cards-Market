@@ -1,6 +1,7 @@
 import { auth, db, functions, storage } from './firebaseconfig'
 import { returnRates } from './currency'
 import * as _ from 'lodash'
+import getDate from './dates'
 
 let errStop = false
 
@@ -132,7 +133,8 @@ export const createPost = async (e: any) => {
             header: postHeader,
             image: fileURL,
             price: postPrice,
-            user: auth.currentUser.displayName
+            user: auth.currentUser.displayName,
+            date: getDate()
         }).then(() => {
 
             const modal = document.querySelector('#modal-createpost');

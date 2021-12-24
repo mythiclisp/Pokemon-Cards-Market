@@ -56,14 +56,9 @@ function addStar() {
 
 Array(200).fill(null).forEach(addStar);
 
-// Background
-
-const spaceTexture = new THREE.TextureLoader().load('../../Images/space.jpg');
-scene.background = spaceTexture;
-
 // Avatar
 
-const jeffTexture = new THREE.TextureLoader().load('../../Images/jeff.png');
+const jeffTexture = new THREE.TextureLoader().load('../../homePage3D.gltf');
 
 const jeff = new THREE.Mesh(new THREE.BoxGeometry(3, 3, 3), new THREE.MeshBasicMaterial({ map: jeffTexture }));
 

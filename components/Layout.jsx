@@ -14,6 +14,7 @@ const Layout = ({children}) => {
         <React.Fragment>
             <Nav/>
             <Modals />
+            <canvas id="bg" className={styles.animation_canvas}></canvas>
             <div className={styles.container}>
                 <main className={styles.main}>
                     {children}

@@ -6,63 +6,87 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 
 const Posts = ({ maxLength, currency }) => {
 
-    let loadingPostsRefs = useRef()
-
+    //Holds the postHTML content
     let [postHTML, setPostHTML] = useState([])
 
+    //The firebase user state
     const [user] = useAuthState(auth)
 
     useEffect(() => {
 
         //Re-init posts
-
         let collapsibleElems = document.querySelectorAll('.collapsible')
         M.Collapsible.init(collapsibleElems)
     }, [postHTML])
 
+    //Updates the post list
     useEffect(() => {
 
+        //Make sure user is defined
+        if (user === null) return
+
+        let postHTMLList = []
+
+        //Get all posts in database
         db.collection('Posts').get().then(posts => {
 
             let i = 0
 
-            let postHTMLList = []
-
             posts.forEach((post) => {
 
+                //Skip the template post
+                if (post.id === 'Initial') return
+
+                //Tracks the max length
                 i++
+
+                //For the max length of the post list
                 if (i < maxLength + 2) {
 
+                    //Wait until currency conversion is return
                     returnRates(user).then(response => {
+
+                        //Set variables for post info
                         let price = Math.round(post.data().price * 100)/100
                         let calcPrice = Math.round(response.rate * parseFloat(price) * 100) /100
                         const symbol = response.symbol
+
+                        //Clear the post list
                         setPostHTML(postHTML.concat())
 
-                        if (post.id != 'Initial') {
+                        //Push the post HTML content to the list
+                        postHTMLList.push(
+                        <li key={Math.random()} className={PostStyles.post}>
+                            <div className={`collapsible-header ${PostStyles.post_header}`}>
+                                <div className={PostStyles.post_header_content} style={{float: 'left'}}>
+                                    <span>
+                                        {`${post.data().header} by `}
+                                        <span style={{fontWeight: 'bold'}}>
+                                            {post.data().user}
+                                        </span>
+                                    </span>
+                                    <span style={{}}>
+                                        {post.data().date}
+                                    </span>
+                                </div>
+                                <div className={PostStyles.post_price_content}>
+                                    {`${symbol}${calcPrice}`}
+                                </div>
+                            </div>
+                            <div className={`collapsible-body ${PostStyles.post_body}`}>
+                                <div className={PostStyles.post_header}>
+                                    {
+                                        `${post.data().header}
+                                        ${post.data().description}`
+                                    }
+                                    <button className='btn pulse red waves-effect modal-trigger' data-target='modal-buy'>Buy now</button>
+                                    <button className='btn pulse orange waves-effect'>Add to cart</button>
+                                </div>
+                            </div>
+                        </li>)
 
-                            postHTMLList.push(
-                                <li key={Math.random()} className={PostStyles.post}>
-                                    <div className={`collapsible-header ${PostStyles.post_header}`}>
-                                        <div className={PostStyles.post_header_content} style={{float: 'left'}}>
-                                            {`${post.data().header} by `}
-                                            <span style={{fontWeight: 'bold'}}>
-                                                {post.data().user}
-                                            </span>
-                                        </div>
-                                        <div className={PostStyles.post_price_content}>
-                                            {`${symbol}${calcPrice}`}
-                                        </div>
-                                    </div>
-                                    <div className="collapsible-body">
-                                        <img src={post.data().image} alt="Post image" style={{width: '60%'}}/>
-                                        {`${post.data().description}`}
-                                    </div>
-                                </li>)
-                                setPostHTML(postHTML.concat(postHTMLList))
-
-                        }
-
+                        //Set the state to the post HTML list to update the UI
+                        setPostHTML(postHTML.concat(postHTMLList))
                     })
                 }
             })
@@ -71,7 +95,7 @@ const Posts = ({ maxLength, currency }) => {
 
     return (
         <React.Fragment>
-            <ul ref={loadingPostsRefs} className={`collapsible posts-container ${PostStyles.posts_container}`}>
+            <ul className={`collapsible posts-container ${PostStyles.posts_container}`}>
                 {postHTML}
             </ul>
         </React.Fragment>

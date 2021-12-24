@@ -96,3 +96,10 @@
     width: 100%;
     flex-direction: column; } }
 
+.animation_canvas {
+  width: 40vw !important;
+  height: 30vh !important;
+  position: absolute;
+  left: 50%;
+  top: 50;
+  transform: translate(-50%, 50%);}
