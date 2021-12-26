@@ -1,7 +1,7 @@
 import React from 'react'
 import {logIn, signUp} from '../../Scripts/firebaseauth'
 import { useAuthState } from 'react-firebase-hooks/auth'
-import { auth, db } from '../../Scripts/firebaseconfig'
+import { auth, db, functions } from '../../Scripts/firebaseconfig'
 import setLocalStorage from '../../Scripts/Cache/localStorage'
 import {sendPasswordReset, changeDisplayName, createPost, changeCurrency} from '../../Scripts/firebaseauth'
 
@@ -9,7 +9,7 @@ const Modals = () => {
 
     const [user] = useAuthState(auth)
 
-    const handleSubmit = e => {
+    function handleSubmit(e) {
 
         //Prevent Page reload
         e.preventDefault()
