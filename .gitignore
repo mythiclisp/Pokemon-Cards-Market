@@ -34,4 +34,6 @@ yarn-error.log*
 /Scripts/firebaseconfig.js
 
 #VSCode setting file
-/.vscode/settings.json
+/.vscode/
+
+manifest

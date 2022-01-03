@@ -12,6 +12,20 @@ const Posts = ({ maxLength, currency }) => {
     //The firebase user state
     const [user] = useAuthState(auth)
 
+    async function getData(UID) {
+
+        const userRef = db.collection('Users').doc(UID)
+        const doc = await userRef.get()
+        if (doc.data()) {
+            const email = doc.data().email
+            const displayName = doc.data().displayName
+            const currency = doc.data().currency
+            console.log('Hello')
+            return `<a href='/users/${UID}'>${displayName}</a>`
+        }
+        return `User ID ${UID} could not be found`
+    }
+
     useEffect(() => {
 
         //Re-init posts
@@ -54,39 +68,45 @@ const Posts = ({ maxLength, currency }) => {
                         //Clear the post list
                         setPostHTML(postHTML.concat())
 
-                        //Push the post HTML content to the list
-                        postHTMLList.push(
-                        <li key={Math.random()} className={PostStyles.post}>
-                            <div className={`collapsible-header ${PostStyles.post_header}`}>
-                                <div className={PostStyles.post_header_content} style={{float: 'left'}}>
-                                    <span>
-                                        {`${post.data().header} by `}
-                                        <span style={{fontWeight: 'bold'}}>
-                                            {post.data().user}
-                                        </span>
-                                    </span>
-                                    <span style={{}}>
-                                        {post.data().date}
-                                    </span>
-                                </div>
-                                <div className={PostStyles.post_price_content}>
-                                    {`${symbol}${calcPrice}`}
-                                </div>
-                            </div>
-                            <div className={`collapsible-body ${PostStyles.post_body}`}>
-                                <div className={PostStyles.post_header}>
-                                    {
-                                        `${post.data().header}
-                                        ${post.data().description}`
-                                    }
-                                    <button className='btn pulse red waves-effect modal-trigger' data-target='modal-buy'>Buy now</button>
-                                    <button className='btn pulse orange waves-effect'>Add to cart</button>
-                                </div>
-                            </div>
-                        </li>)
+                        getData(post.data().user).then((response) => {
+                            let userLinkRef = response
+                            //Push the post HTML content to the list
 
-                        //Set the state to the post HTML list to update the UI
-                        setPostHTML(postHTML.concat(postHTMLList))
+                            postHTMLList.push(
+                            <li key={Math.random()} className={PostStyles.post}>
+                                <div className={`collapsible-header ${PostStyles.post_header}`}>
+                                    <div className={PostStyles.post_header_content} style={{float: 'left'}}>
+                                        <span>
+                                            {`${post.data().header} by `}
+                                            <span style={{fontWeight: 'bold'}}
+                                            dangerouslySetInnerHTML={{__html: userLinkRef}}>
+                                            </span>
+                                        </span>
+                                        <span style={{}}>
+                                            {post.data().date}
+                                        </span>
+                                    </div>
+                                    <div className={PostStyles.post_price_content}>
+                                        {`${symbol}${calcPrice}`}
+                                    </div>
+                                </div>
+                                <div className={`collapsible-body ${PostStyles.post_body}`}>
+                                    <div className={PostStyles.post_header}>
+                                        {
+                                            `${post.data().header}
+                                            ${post.data().description}`
+                                        }
+                                        <button className='btn pulse red waves-effect modal-trigger' data-target='modal-buy'>Buy now</button>
+                                        <button className='btn pulse orange waves-effect'>Add to cart</button>
+                                    </div>
+                                </div>
+                            </li>)
+
+                            //Set the state to the post HTML list to update the UI
+                            setPostHTML(postHTML.concat(postHTMLList))
+                        })
+
+
                     })
                 }
             })

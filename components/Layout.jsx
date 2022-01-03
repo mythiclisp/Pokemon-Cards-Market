@@ -3,6 +3,7 @@ import Nav from './Nav'
 import Modals from './Modals/modals.jsx'
 import React, { useEffect } from 'react'
 import loadAnimation from '../Scripts/Animations/main'
+import { useRouter } from 'next/router';
 
 const Layout = ({children}) => {
 

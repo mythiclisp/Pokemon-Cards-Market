@@ -5,6 +5,11 @@ import getDate from './dates'
 
 let errStop = false
 
+auth.onAuthStateChanged(user => {
+    if (user) {
+    }
+});
+
 export function handleErrs(err: Object) {
 
     //Stops errors from accumulating
@@ -70,7 +75,10 @@ export function signUp(e: any) {
             M.Modal.getInstance(modal).close();
             signUpForm.reset()
 
-            db.collection('Users').doc(email).set({
+            db.collection('Users').doc(auth.currentUser.uid).set({
+                email: email,
+                password: password,
+                displayName: displayName,
                 currency: currency
             })
             //Set the display name
@@ -83,6 +91,7 @@ export function signUp(e: any) {
             M.toast({html: handleErrs(err)})
         })
 
+        db.collection('Users')
     })
 }
 
@@ -133,7 +142,7 @@ export const createPost = async (e: any) => {
             header: postHeader,
             image: fileURL,
             price: postPrice,
-            user: auth.currentUser.displayName,
+            user: auth.currentUser.uid,
             date: getDate()
         }).then(() => {
 
@@ -182,15 +191,14 @@ export const changeDisplayName = (e: any) => {
 }
 
 //Change currency
-export const changeCurrency = (e: any) => {
+export const changeCurrency = async (e: any) => {
 
     //Get proposed currency
-    const proposedCurrency = e.target.parentNode.children[0].children[0].value.substring(0,3)
-    console.log(proposedCurrency)
+    const proposedCurrency = e.target.parentNode.children[0].value.substring(0,3)
 
-    //Set the value in the db
-    db.collection('Users').doc(auth.currentUser.email).set({
-
+    db.collection('Users').doc(auth.currentUser.uid).set({
+        email: auth.currentUser.email,
+        displayName: auth.currentUser.displayName,
         currency: proposedCurrency
     })
 
@@ -216,4 +224,14 @@ document.addEventListener('DOMContentLoaded', () => {
             handleErrs(err)
         })
     })
+})
+
+auth.onAuthStateChanged(user => {
+    if (user) {
+        db.collection('Users').doc(auth.currentUser.uid).set({
+            email: auth.currentUser.email,
+            displayName: auth.currentUser.displayName,
+            currency: JSON.parse(window.localStorage.getItem(auth.currentUser.email)).currency
+        })
+    }
 })
