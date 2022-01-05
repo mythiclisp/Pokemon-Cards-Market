@@ -1,18 +1,9 @@
 module.exports = {
-  exportPathMap: async function(
-    defaultPathMap,
-    { dev, dir, outDir, distDir, buildId }
-    ) {
-    return {
-      "/": { page: "/" },
-      "/about": { page: "/about" },
-      "/cards": { page: "/cards"}
-    };
-  },
   images: {
     loader: 'imgix',
     path: '',
   },
+  exportTrailingSlash: true,
   reactStrictMode: true,
   swcMinify: false
 }

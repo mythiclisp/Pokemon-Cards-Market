@@ -2,7 +2,10 @@ import { auth, db, functions, storage } from './firebaseconfig'
 import { returnRates } from './currency'
 import * as _ from 'lodash'
 import getDate from './dates'
-
+async function addPost(post) {
+    const { id } = await db.collection("Posts").add(post)
+    return id
+}
 let errStop = false
 
 auth.onAuthStateChanged(user => {
@@ -136,15 +139,26 @@ export const createPost = async (e: any) => {
         const postHeader = e.target.parentNode['post-header'].value
         const postBody = e.target.parentNode['post-body'].value
         const postPrice = parseInt(e.target.parentNode['post-price'].value) / response.rate
+        let postId
 
-        db.collection('Posts').add({
+        addPost({
             description: postBody,
             header: postHeader,
             image: fileURL,
             price: postPrice,
             user: auth.currentUser.uid,
             date: getDate()
-        }).then(() => {
+        }).then((res) => {
+
+            postId = res
+            let userData
+
+            db.collection('Users').doc(auth.currentUser.uid).get().then(data => {
+
+                userData = data.data()
+                userData.posts += `,${postId}`
+                db.collection('Users').doc(auth.currentUser.uid).set(userData)
+            })
 
             const modal = document.querySelector('#modal-createpost');
             M.Modal.getInstance(modal).close();
@@ -194,7 +208,9 @@ export const changeDisplayName = (e: any) => {
 export const changeCurrency = async (e: any) => {
 
     //Get proposed currency
-    const proposedCurrency = e.target.parentNode.children[0].value.substring(0,3)
+    let proposedCurrency = e.target.parentNode.children[0].value
+    if (proposedCurrency === undefined) proposedCurrency = e.target.parentNode.children[0].children[0].value
+    proposedCurrency = proposedCurrency.substring(0,3)
 
     db.collection('Users').doc(auth.currentUser.uid).set({
         email: auth.currentUser.email,
@@ -228,10 +244,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 auth.onAuthStateChanged(user => {
     if (user) {
-        db.collection('Users').doc(auth.currentUser.uid).set({
-            email: auth.currentUser.email,
-            displayName: auth.currentUser.displayName,
-            currency: JSON.parse(window.localStorage.getItem(auth.currentUser.email)).currency
+        db.collection('Users').doc(auth.currentUser.uid).get().then(data => {
+            data = data.data()
+            data.email = auth.currentUser.email
+            data.displayName = auth.currentUser.displayName,
+            data.currency = JSON.parse(window.localStorage.getItem(auth.currentUser.email)).currency
+            db.collection('Users').doc(auth.currentUser.uid).set(data)
         })
     }
 })
+

@@ -76,6 +76,9 @@ const Nav = () => {
                 <li>
                     <Link href="/popular">Popular</Link>
                 </li>
+                <li>
+                    <Link href="/users/1o0RQiYoRqaMAF3Kt7o6uZNFZek2">Users</Link>
+                </li>
             </ul>
             <ul className={navStyles.nav_account_actions}>
                 <LoggedInLinks />

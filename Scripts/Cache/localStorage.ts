@@ -8,12 +8,9 @@ export default async function setLocalStorage(e: any) {
         currency: ""
     }
 
-    console.log('Set storage')
-
     //Get Database values
     const userRef = db.collection('Users').doc(currentUser);
     const doc = await userRef.get();
-    console.log(doc)
 
     //Set values of JSON and return
     userCurrencyCreds.currency = await doc.data().currency

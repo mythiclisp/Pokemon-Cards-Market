@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useRouter } from "next/router";
 import { db } from "../../Scripts/firebaseconfig";
+import UserPosts from "../../components/UserPosts";
 
-export default function userPage() {
+export default function UserPage() {
     const { query } = useRouter();
     const { UID } = query;
     let [userInfo, setUserInfo] = useState(null)
@@ -27,8 +28,13 @@ export default function userPage() {
     })
 
     return (
-        <h4>
-            {userInfo}
-        </h4>
+        <React.Fragment>
+            <h3>User profile:</h3>
+            <h6 style={{textAlign: 'center'}}>
+                {userInfo}
+            </h6>
+            <h4>Posts</h4>
+            {<UserPosts maxLength={10} UID={UID}></UserPosts>}
+        </React.Fragment>
     )
 }

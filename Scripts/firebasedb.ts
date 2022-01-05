@@ -1,19 +1,19 @@
 import { forEach, indexOf } from 'lodash'
-import {db} from './firebaseconfig'
+import {db,auth} from './firebaseconfig'
 import { handleErrs } from './firebaseauth'
 
 export const getPosts = (resolve: Function, reject: Function) => {
     const postsList = []
 
     db.collection('Posts').get().then(posts => {
-        
+
         posts.forEach(post => {
 
             if (post.id != 'Initial') postsList.push(post)
         })
 
         resolve(postsList)
-    }) 
+    })
 }
 
 export async function deletePosts() {
@@ -33,5 +33,18 @@ export async function deletePosts() {
 
     }).catch(err => {
         M.toast({html: handleErrs(err)})
+    })
+
+
+    db.collection('Users').get().then(docs => {
+
+        docs.forEach(doc => {
+
+            if(doc.id != 'initial') {
+                let data = doc.data()
+                data.posts = ''
+                db.collection('Users').doc(doc.id).set(data)
+            }
+        })
     })
 }

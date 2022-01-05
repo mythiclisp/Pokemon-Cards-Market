@@ -3,6 +3,7 @@ import PostStyles from '../css/Posts.module.css'
 import { auth, db } from '../Scripts/firebaseconfig'
 import { returnRates } from '../Scripts/currency'
 import { useAuthState } from 'react-firebase-hooks/auth'
+import Link from 'next/link'
 
 const Posts = ({ maxLength, currency }) => {
 
@@ -20,8 +21,7 @@ const Posts = ({ maxLength, currency }) => {
             const email = doc.data().email
             const displayName = doc.data().displayName
             const currency = doc.data().currency
-            console.log('Hello')
-            return `<a href='/users/${UID}'>${displayName}</a>`
+            return <Link href={`/users/${UID}`}>{displayName}</Link>
         }
         return `User ID ${UID} could not be found`
     }
@@ -67,7 +67,6 @@ const Posts = ({ maxLength, currency }) => {
 
                         //Clear the post list
                         setPostHTML(postHTML.concat())
-
                         getData(post.data().user).then((response) => {
                             let userLinkRef = response
                             //Push the post HTML content to the list
@@ -78,8 +77,8 @@ const Posts = ({ maxLength, currency }) => {
                                     <div className={PostStyles.post_header_content} style={{float: 'left'}}>
                                         <span>
                                             {`${post.data().header} by `}
-                                            <span style={{fontWeight: 'bold'}}
-                                            dangerouslySetInnerHTML={{__html: userLinkRef}}>
+                                            <span>
+                                                {userLinkRef}
                                             </span>
                                         </span>
                                         <span style={{}}>

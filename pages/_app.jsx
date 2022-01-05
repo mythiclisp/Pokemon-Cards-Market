@@ -15,7 +15,7 @@ function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     if (user) {
-      setLocalStorage()
+      setLocalStorage(false)
       returnRates(user)
     }
   },[user])
