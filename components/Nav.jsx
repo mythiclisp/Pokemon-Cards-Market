@@ -20,6 +20,9 @@ const LoggedInLinks = () => {
 
     return (
         <React.Fragment>
+            <li>
+                <Link href='/cart'>Cart</Link>
+            </li>
             <li data-target='modal-createpost' className='modal-trigger' style={user ? null : style}>
                 <Link href="/">Create Post</Link>
             </li>
@@ -72,12 +75,6 @@ const Nav = () => {
                 </li>
                 <li>
                     <Link href="/cards">Cards</Link>
-                </li>
-                <li>
-                    <Link href="/popular">Popular</Link>
-                </li>
-                <li>
-                    <Link href="/users/1o0RQiYoRqaMAF3Kt7o6uZNFZek2">Users</Link>
                 </li>
             </ul>
             <ul className={navStyles.nav_account_actions}>

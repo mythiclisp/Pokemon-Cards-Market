@@ -4,6 +4,7 @@ import { auth, db } from '../Scripts/firebaseconfig'
 import { returnRates } from '../Scripts/currency'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import Link from 'next/link'
+import { addToCart } from '../Scripts/firebaseauth'
 
 const Posts = ({ maxLength, currency }) => {
 
@@ -96,7 +97,7 @@ const Posts = ({ maxLength, currency }) => {
                                             ${post.data().description}`
                                         }
                                         <button className='btn pulse red waves-effect modal-trigger' data-target='modal-buy'>Buy now</button>
-                                        <button className='btn pulse orange waves-effect'>Add to cart</button>
+                                        <button className='btn pulse orange waves-effect' onClick={() => addToCart(post.id)}>Add to cart</button>
                                     </div>
                                 </div>
                             </li>)

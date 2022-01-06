@@ -3,10 +3,9 @@ import PostStyles from '../css/Posts.module.css'
 import { auth, db } from '../Scripts/firebaseconfig'
 import { returnRates } from '../Scripts/currency'
 import { useAuthState } from 'react-firebase-hooks/auth'
-import { addToCart } from '../Scripts/firebaseauth'
 import Link from 'next/link'
 
-const UserPosts = ({ maxLength, UID }) => {
+const CartPosts = ({ maxLength, UID }) => {
 
     //Holds the postHTML content
     let [postHTML, setPostHTML] = useState([])
@@ -46,7 +45,7 @@ const UserPosts = ({ maxLength, UID }) => {
 
         db.collection('Users').doc(UID).get().then(doc => {
 
-            let unParsedUserPosts = doc.data().posts
+            let unParsedUserPosts = doc.data().cart
             unParsedUserPosts = unParsedUserPosts.slice(1)
             userPosts = unParsedUserPosts.split(',')
 
@@ -106,7 +105,7 @@ const UserPosts = ({ maxLength, UID }) => {
                                                 ${post.data().description}`
                                             }
                                             <button className='btn pulse red waves-effect modal-trigger' data-target='modal-buy'>Buy now</button>
-                                            <button className='btn pulse orange waves-effect' onClick={() => addToCart(post.id)}>Add to cart</button>
+                                            <button className='btn pulse orange waves-effect'>Add to cart</button>
                                         </div>
                                     </div>
                                 </li>)
@@ -132,5 +131,5 @@ const UserPosts = ({ maxLength, UID }) => {
     )
 }
 
-export default UserPosts
+export default CartPosts
 

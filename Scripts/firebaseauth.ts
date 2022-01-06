@@ -221,6 +221,16 @@ export const changeCurrency = async (e: any) => {
     M.toast({html: `Successfully changed currency to ${proposedCurrency}`})
 }
 
+export const addToCart = (postId) => {
+
+    db.collection('Users').doc(auth.currentUser.uid).get().then(doc => {
+
+        const data = doc.data()
+        data.cart += `,${postId}`
+        db.collection('Users').doc(auth.currentUser.uid).set(data)
+    })
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 
     var elems = document.querySelectorAll('.collapsible');
