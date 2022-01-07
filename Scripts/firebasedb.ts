@@ -1,6 +1,7 @@
 import { forEach, indexOf } from 'lodash'
 import {db,auth} from './firebaseconfig'
-import { handleErrs } from './firebaseauth'
+import { handleErrs, addPost } from './firebaseauth'
+import getDate from './dates'
 
 export const getPosts = (resolve: Function, reject: Function) => {
     const postsList = []
@@ -49,7 +50,41 @@ export async function deletePosts() {
     })
 }
 
-export async function deletePost(postId) {
+export async function deletePost(postId, userId) {
 
+    db.collection('Users').doc(userId).get().then(res => {
+
+        let data = res.data()
+        data.posts = data.posts.replace(`,${postId}`, '')
+        db.collection('Users').doc(userId).set(data)
+    })
     db.collection('Posts').doc(postId).delete()
+}
+
+auth.onAuthStateChanged(user => {
+   
+})
+
+async function addTemplatePosts(user) {
+
+    let data = {
+        date: getDate(),
+        description: 'Post body',
+        header: 'Post header',
+        image: 'https://firebasestorage.googleapis.com/v0/b/pokemon-cards-market.appspot.com/o/wp2356164-gym-workout-wallpapers.jpg?alt=media&token=d466efaf-65f3-4b0f-a75f-27aa7d608f80',
+        price: '1000',
+        user: user.uid
+    }
+    addPost(data).then((res) => {
+
+        const postId = res
+        let userData
+
+        db.collection('Users').doc(auth.currentUser.uid).get().then(data => {
+
+            userData = data.data()
+            userData.posts += `,${postId}`
+            db.collection('Users').doc(auth.currentUser.uid).set(userData)
+        })
+    })
 }

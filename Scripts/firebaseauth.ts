@@ -2,7 +2,7 @@ import { auth, db, functions, storage } from './firebaseconfig'
 import { returnRates } from './currency'
 import * as _ from 'lodash'
 import getDate from './dates'
-async function addPost(post) {
+export async function addPost(post) {
     const { id } = await db.collection("Posts").add(post)
     return id
 }
@@ -136,6 +136,7 @@ export const createPost = async (e: any) => {
     const fileURL = await fileRef.getDownloadURL()
 
     returnRates(auth.currentUser).then((response: any) => {
+
         const postHeader = e.target.parentNode['post-header'].value
         const postBody = e.target.parentNode['post-body'].value
         const postPrice = parseInt(e.target.parentNode['post-price'].value) / response.rate

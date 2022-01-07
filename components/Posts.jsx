@@ -90,8 +90,8 @@ const Posts = ({ maxLength, currency }) => {
                                     <div className={PostStyles.post_price_content}>
                                         {auth.currentUser.email==='theonlybaconsandwich@gmail.com' ? 
                                         <span 
-                                            onClick={() => deletePost(post.id)}
-                                            style={{fontWeight: 'bold', marginRight: '2rem'}}>✕</span> : ''}
+                                            onClick={() => deletePost(post.id, post.data().user)}
+                                            style={{fontWeight: 'bold', marginRight: '2rem', cursor: 'pointer'}}>✕</span> : ''}
                                         {`${symbol}${calcPrice}`}
                                     </div>
                                 </div>
