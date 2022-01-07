@@ -1,12 +1,11 @@
 .posts_container {
   width: 100%; }
 
+.post_header_content {
+  width: 50%; }
+
 .post_header {
   width: 100%; }
-
-.post_header_content {
-  width: 50%;
-display: grid; }
 
 .post_price_content {
   width: 50%;
@@ -24,3 +23,11 @@ display: grid; }
 .post_body_left {
   width: 100%;
   display: grid; }
+
+.post_buttons {
+  margin-right: 5%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  place-items: center;
+  float: left;
+  width: 25%; }

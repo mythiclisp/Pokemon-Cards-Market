@@ -81,6 +81,7 @@ const Posts = ({ maxLength, currency }) => {
                                             {`${post.data().header} by `}
                                             <span>
                                                 {userLinkRef}
+                                                {' '}
                                             </span>
                                         </span>
                                         <span style={{}}>
@@ -97,12 +98,16 @@ const Posts = ({ maxLength, currency }) => {
                                 </div>
                                 <div className={`collapsible-body ${PostStyles.post_body}`}>
                                     <div className={PostStyles.post_header}>
-                                        {
-                                            `${post.data().header}
-                                            ${post.data().description}`
-                                        }
-                                        <button className='btn pulse red waves-effect modal-trigger' data-target='modal-buy'>Buy now</button>
-                                        <button className='btn pulse orange waves-effect' onClick={() => addToCart(post.id)}>Add to cart</button>
+                                        <div className={PostStyles.post_buttons}>
+                                            <button className='btn pulse red waves-effect modal-trigger' data-target='modal-buy'>Buy now</button>
+                                            <button className='btn pulse orange waves-effect' onClick={() => addToCart(post.id)}>Add to cart</button>
+                                        </div>
+                                        <span className={PostStyles.post_body_content}>
+                                            {
+                                                `${post.data().header}
+                                                ${post.data().description}`
+                                            }
+                                        </span>
                                     </div>
                                 </div>
                             </li>)
