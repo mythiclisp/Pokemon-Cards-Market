@@ -7,7 +7,7 @@ export default function Cart() {
     return (
         <React.Fragment>
             <h3>Cart</h3>
-            <CartPosts maxLength={1000} UID={auth.currentUser.uid}/>
+            {auth.currentUser ? <CartPosts maxLength={1000} UID={auth.currentUser.uid}/> : ''}
         </React.Fragment>
     )
 }
