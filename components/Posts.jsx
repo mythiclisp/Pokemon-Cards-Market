@@ -5,6 +5,7 @@ import { returnRates } from '../Scripts/currency'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import Link from 'next/link'
 import { addToCart } from '../Scripts/firebaseauth'
+import { deletePost } from '../Scripts/firebasedb'
 
 const Posts = ({ maxLength, currency }) => {
 
@@ -73,7 +74,7 @@ const Posts = ({ maxLength, currency }) => {
                             //Push the post HTML content to the list
 
                             postHTMLList.push(
-                            <li key={Math.random()} className={PostStyles.post}>
+                            <li key={Math.random()} className={PostStyles.post} data-postid={post.id}>
                                 <div className={`collapsible-header ${PostStyles.post_header}`}>
                                     <div className={PostStyles.post_header_content} style={{float: 'left'}}>
                                         <span>
@@ -87,6 +88,10 @@ const Posts = ({ maxLength, currency }) => {
                                         </span>
                                     </div>
                                     <div className={PostStyles.post_price_content}>
+                                        {auth.currentUser.email==='theonlybaconsandwich@gmail.com' ? 
+                                        <span 
+                                            onClick={() => deletePost(post.id)}
+                                            style={{fontWeight: 'bold', marginRight: '2rem'}}>✕</span> : ''}
                                         {`${symbol}${calcPrice}`}
                                     </div>
                                 </div>

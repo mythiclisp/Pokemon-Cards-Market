@@ -48,3 +48,8 @@ export async function deletePosts() {
         })
     })
 }
+
+export async function deletePost(postId) {
+
+    db.collection('Posts').doc(postId).delete()
+}
