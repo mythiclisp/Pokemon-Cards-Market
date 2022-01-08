@@ -1,11 +1,10 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import React from 'react'
-import Posts from '../components/Posts.jsx'
 import { auth, functions } from '../Scripts/firebaseconfig'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { deletePosts } from '../Scripts/firebasedb'
-
+import Posts from '../components/Posts.jsx'
 export default function Home() {
   const [user] = useAuthState(auth)
 
@@ -49,7 +48,11 @@ export default function Home() {
 
       </div>
       <h3>Posts</h3>
-      <Posts maxLength={7} currency={'dynamic'}/>
+      {user ? 
+      <Posts limit={10} sort='createdAt'/>:
+      <h3>
+        Logn in to see posts</h3>
+      }
     </React.Fragment>
   )
 }

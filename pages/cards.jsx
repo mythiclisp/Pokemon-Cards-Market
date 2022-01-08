@@ -16,11 +16,11 @@ const Home = () => {
             {user ?
             <React.Fragment>
                 <h3>Popular</h3>
-                <Posts maxLength={5} currency={'dynamic'}/>
+                <Posts limit={5}/>
                 <h3>Trending</h3>
-                <Posts maxLength={5} currency={'dynamic'}/>
+                <Posts limit={5}/>
                 <h3>Recomended</h3>
-                <Posts maxLength={5} currency={'dynamic'}/>
+                <Posts limit={5}/>
             </React.Fragment>
             : <h3>Please log in or sign up</h3>}
         </React.Fragment>
