@@ -58,16 +58,33 @@ export async function deletePost(postId, userId) {
         data.posts = data.posts.replace(`,${postId}`, '')
         db.collection('Users').doc(userId).set(data)
     })
+    //Delete post from posts collection
     db.collection('Posts').doc(postId).delete()
+
+    //Refrence to user collection
+    let usersRef = db.collection('Users')
+
+    //Query results to delete from cart 
+    let cartQuery = usersRef.where('cart', 'array-contains-any', [postId])
+    cartQuery.get().then(users => {
+        users.forEach(user => {
+            let data = user.data()
+            data.cart.splice(data.cart.indexOf(postId), 1)
+            console.log(user.id)
+            db.collection('Users').doc(user.id).set(data)
+        })
+    })
+
 }
 
 auth.onAuthStateChanged(user => {
    
 })
 
-async function addTemplatePosts(user) {
+export async function addTemplatePosts(user) {
 
     let data = {
+        createdAt: new Date(),
         date: getDate(),
         description: 'Post body',
         header: 'Post header',

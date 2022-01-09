@@ -82,7 +82,8 @@ export function signUp(e: any) {
                 email: email,
                 password: password,
                 displayName: displayName,
-                currency: currency
+                currency: currency,
+                cart: []
             })
             //Set the display name
             return response.user.updateProfile({
@@ -155,13 +156,6 @@ export const createPost = async (e: any) => {
             postId = res
             let userData
 
-            db.collection('Users').doc(auth.currentUser.uid).get().then(data => {
-
-                userData = data.data()
-                userData.posts += `,${postId}`
-                db.collection('Users').doc(auth.currentUser.uid).set(userData)
-            })
-
             const modal = document.querySelector('#modal-createpost');
             M.Modal.getInstance(modal).close();
 
@@ -230,7 +224,7 @@ export const addToCart = (postId) => {
     db.collection('Users').doc(auth.currentUser.uid).get().then(doc => {
 
         const data = doc.data()
-        data.cart += `,${postId}`
+        data.cart.push(postId)
         db.collection('Users').doc(auth.currentUser.uid).set(data)
     })
 }
@@ -263,6 +257,7 @@ auth.onAuthStateChanged(user => {
             data.email = auth.currentUser.email
             data.displayName = auth.currentUser.displayName,
             data.currency = JSON.parse(window.localStorage.getItem(auth.currentUser.email)).currency
+            console.log(typeof data.cart)
             db.collection('Users').doc(auth.currentUser.uid).set(data)
         })
     }

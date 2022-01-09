@@ -6,12 +6,22 @@ import { auth, db } from "../Scripts/firebaseconfig"
 import { deletePost } from "../Scripts/firebasedb"
 import Link from "next/link"
 import { useState } from "react"
+import { addToCart } from "../Scripts/firebaseauth"
 
 export default function Post (props) {
 
+    let usersRef = db.collection('Users')
+    let cartQuery = usersRef.where('cart', '==', ``)
+    cartQuery.get().then(users => {
+        users.forEach(user => {
+            let data = user.data()
+            db.collection('Users').doc(user.data().id).set(data)
+        })
+    })
+
     //Define props
     const {header, date, description, image, user, price} = props.data
-    const id = props.id
+    const id = props.postId
 
     let [authUser] = useAuthState(auth)
 

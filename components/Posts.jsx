@@ -33,7 +33,7 @@ export default function Posts(props) {
     return (
         <React.Fragment>
             <ul className={`collapsible popout posts-container ${PostStyles.posts_container}`}>
-                {posts && posts.map(post => <Post key={post.id} data={post}/>)}
+                {posts && posts.map(post => <Post key={post.id} postId={post.id} data={post}/>)}
             </ul>
         </React.Fragment>
     )

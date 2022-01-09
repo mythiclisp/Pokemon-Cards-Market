@@ -1,13 +1,12 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import React from 'react'
-import { auth, functions } from '../Scripts/firebaseconfig'
+import React, { useEffect } from 'react'
+import { auth, db, functions } from '../Scripts/firebaseconfig'
 import { useAuthState } from 'react-firebase-hooks/auth'
-import { deletePosts } from '../Scripts/firebasedb'
+import { deletePosts, addTemplatePosts } from '../Scripts/firebasedb'
 import Posts from '../components/Posts.jsx'
 export default function Home() {
   const [user] = useAuthState(auth)
-
 
   return (
     <React.Fragment>
@@ -18,6 +17,9 @@ export default function Home() {
         <div className="container center-align prompts-container">
           <button className='btn-large pulse green waves-effect' onClick={deletePosts}>
             Delete all posts
+          </button>
+          <button className='btn-large pulse green waves-effect' onClick={() => addTemplatePosts(user)}>
+            Add template post
           </button>
         </div>
         <div className='border-break'></div>
