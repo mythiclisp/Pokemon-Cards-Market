@@ -225,7 +225,7 @@ export const addToCart = (postId) => {
 
         const data = doc.data()
         data.cart.push(postId)
-        db.collection('Users').doc(auth.currentUser.uid).set(data)
+        if (data.cart.includes(postId)===false) db.collection('Users').doc(auth.currentUser.uid).set(data)
     })
 }
 
@@ -257,7 +257,6 @@ auth.onAuthStateChanged(user => {
             data.email = auth.currentUser.email
             data.displayName = auth.currentUser.displayName,
             data.currency = JSON.parse(window.localStorage.getItem(auth.currentUser.email)).currency
-            console.log(typeof data.cart)
             db.collection('Users').doc(auth.currentUser.uid).set(data)
         })
     }

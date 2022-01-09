@@ -7,7 +7,7 @@ export default function Cart() {
     return (
         <React.Fragment>
             <h3>Cart</h3>
-            {auth.currentUser ? <Posts limit={30}></Posts> : ''}
+            {auth.currentUser ? <Posts limit={30} cart={true}></Posts> : ''}
         </React.Fragment>
     )
 }

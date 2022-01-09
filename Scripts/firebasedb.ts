@@ -70,7 +70,6 @@ export async function deletePost(postId, userId) {
         users.forEach(user => {
             let data = user.data()
             data.cart.splice(data.cart.indexOf(postId), 1)
-            console.log(user.id)
             db.collection('Users').doc(user.id).set(data)
         })
     })
@@ -102,6 +101,42 @@ export async function addTemplatePosts(user) {
             userData = data.data()
             userData.posts += `,${postId}`
             db.collection('Users').doc(auth.currentUser.uid).set(userData)
+        })
+    })
+}
+
+export function getCart(user) {
+
+    return new Promise ((resolve, rej) => {
+
+        let postsList = [] 
+        let postDataList = []
+
+        //Get user firestore document
+        db.collection('Users').doc(user.uid).get().then(res => {
+        
+            //For each item in cart
+            res.data().cart.forEach(cartItem => {
+    
+                postsList.push(cartItem)
+            })
+
+            //Loop through
+            for (let i=0;i<postsList.length;i++) {
+
+                let postId = res.data().cart[i]
+
+                db.collection('Posts').doc(postId).get().then(res => {
+                    
+                    let data = res.data()
+                    Object.assign(data, {id: res.id});
+                    postDataList.push(data)
+                    if(i+1===postsList.length) {
+
+                        resolve(postDataList)
+                    }
+                })
+            }
         })
     })
 }
