@@ -21,7 +21,7 @@ export default function Posts(props) {
     let userQuery = props.uid ? postsRef.where('user', '==', props.uid) : null
 
     //Make state variable for posts
-    let [posts] = props.cart ? useCollectionData() : useCollectionData((props.uid ? userQuery : query), {idField: 'id'})
+    let [posts] = useCollectionData((props.uid ? userQuery : query), {idField: 'id'})
     let [cartPosts, setCartPosts] = useState()
 
     let [authUser] = useAuthState(auth)

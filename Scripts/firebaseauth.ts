@@ -224,8 +224,12 @@ export const addToCart = (postId) => {
     db.collection('Users').doc(auth.currentUser.uid).get().then(doc => {
 
         const data = doc.data()
-        data.cart.push(postId)
-        if (data.cart.includes(postId)===false) db.collection('Users').doc(auth.currentUser.uid).set(data)
+        
+        if (data.cart.includes(postId)===false) {
+
+            data.cart.push(postId)
+            db.collection('Users').doc(auth.currentUser.uid).set(data)
+        }
     })
 }
 
