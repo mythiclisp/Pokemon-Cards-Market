@@ -71,31 +71,44 @@ export function signUp(e: any) {
         const password: string = signUpForm['signup-password'].value;
         const currency: string = signUpForm['currency'].value.substring(0,3)
 
-        auth.createUserWithEmailAndPassword(email, password).then(response => {
+        //Upload PFP to firebase storage bucket
+        const postImage = e.target.parentNode.children[2].children[3].children[0].files[0]
+        const storageRef = storage.ref()
+        const fileRef = storageRef.child(postImage.name)
+        fileRef.put(postImage)
+        let fileURL
+        fileRef.getDownloadURL().then(res => {
 
-            //Close the form and reset it's values
-            const modal: HTMLElement = document.querySelector('#modal-signup');
-            M.Modal.getInstance(modal).close();
-            signUpForm.reset()
+            //Define file URL
+            fileURL = res
 
-            db.collection('Users').doc(auth.currentUser.uid).set({
-                email: email,
-                password: password,
-                displayName: displayName,
-                currency: currency,
-                cart: []
+            //Create user
+            auth.createUserWithEmailAndPassword(email, password).then(response => {
+
+                //Close the form and reset it's values
+                const modal: HTMLElement = document.querySelector('#modal-signup');
+                M.Modal.getInstance(modal).close();
+                signUpForm.reset()
+    
+                db.collection('Users').doc(auth.currentUser.uid).set({
+                    email: email,
+                    password: password,
+                    displayName: displayName,
+                    currency: currency,
+                    cart: [],
+                    imageURL: fileURL
+                })
+                //Set the display name and PFP
+                return response.user.updateProfile({
+    
+                    displayName: displayName,
+                    photoURL: fileURL
+                })
+            }).catch(err => {
+    
+                M.toast({html: handleErrs(err)})
             })
-            //Set the display name
-            return response.user.updateProfile({
-
-                displayName: displayName
-            })
-        }).catch(err => {
-
-            M.toast({html: handleErrs(err)})
         })
-
-        db.collection('Users')
     })
 }
 
@@ -131,6 +144,7 @@ export const createPost = async (e: any) => {
 
     //Putting post image in storage bucket
     const postImage = e.target.parentNode['post-image'].files[0]
+    console.log(postImage)
     const storageRef = storage.ref()
     const fileRef = storageRef.child(postImage.name)
     await fileRef.put(postImage)
@@ -242,16 +256,6 @@ document.addEventListener('DOMContentLoaded', () => {
     M.Modal.init(elems);
 
     M.AutoInit()
-
-    //Onclick for signout button
-    document.querySelector('.logout-btn').addEventListener('click', () => {
-
-        auth.signOut().then(() => {
-
-        }).catch(err => {
-            handleErrs(err)
-        })
-    })
 })
 
 auth.onAuthStateChanged(user => {
@@ -266,3 +270,13 @@ auth.onAuthStateChanged(user => {
     }
 })
 
+export async function addImageToStorage(file) {
+
+    //Putting post image in storage bucket
+    const storageRef = storage.ref()
+    const fileRef = storageRef.child(file.name)
+    await fileRef.put(file)
+    const fileURL = await fileRef.getDownloadURL()
+
+    return fileURL
+}

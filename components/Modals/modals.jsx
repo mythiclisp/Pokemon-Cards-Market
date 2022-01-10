@@ -45,6 +45,9 @@ const Modals = () => {
                             <label htmlFor="signup-password">Choose password</label>
                         </div>
                         <div className="input-field">
+                            <input type="file" id='post-image' accept='image/x-png,image/gif,image/jpeg'/>
+                        </div>
+                        <div className="input-field">
                             <select className="currency" name="currency">
                             <option>Select currency</option>
                             <option value="AFN">AFN - Afghan Afghani - ؋</option>
@@ -479,7 +482,7 @@ const Modals = () => {
                             <label htmlFor="post-price">Price</label>
                         </div>
                         <div className="input-field">
-                            <input type="file" id='post-image'/>
+                            <input type="file" id='post-image' accept='image/x-png,image/gif,image/jpeg'/>
                         </div>
                         <button className='btn yellow darken-2 z-depth-0' onClick={createPost}>Post</button>
                     </form>
