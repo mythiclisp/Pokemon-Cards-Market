@@ -8,7 +8,6 @@ import { auth } from '../Scripts/firebaseconfig'
 export default function Nav() {
 
     let [user] = useAuthState(auth)
-    console.log(user)
 
     return (
         <nav className="bg-gray-800">
@@ -33,7 +32,7 @@ export default function Nav() {
                             </div>
                         </div>
                     </div>
-                    <div className="gap-x-2 absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                    <div className="gap-x-5 absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                         {user ? 
                         <>
                         <div className='relative'>

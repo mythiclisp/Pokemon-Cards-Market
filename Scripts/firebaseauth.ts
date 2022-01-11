@@ -155,6 +155,7 @@ export const createPost = async (e: any) => {
         const postHeader = e.target.parentNode['post-header'].value
         const postBody = e.target.parentNode['post-body'].value
         const postPrice = parseInt(e.target.parentNode['post-price'].value) / response.rate
+        const condition = e.target.parentNode['condition'].value
         let postId
 
         addPost({
@@ -164,7 +165,8 @@ export const createPost = async (e: any) => {
             price: postPrice,
             user: auth.currentUser.uid,
             date: getDate(),
-            createdAt: new Date()
+            createdAt: new Date(),
+            condition: condition
         }).then((res) => {
 
             postId = res

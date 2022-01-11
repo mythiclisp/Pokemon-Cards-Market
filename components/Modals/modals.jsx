@@ -484,6 +484,10 @@ const Modals = () => {
                         <div className="input-field">
                             <input type="file" id='post-image' accept='image/x-png,image/gif,image/jpeg'/>
                         </div>
+                        <div className="input-field">
+                            <input type="text" id='condition'/>
+                            <label htmlFor="condition">Card Condition</label>
+                        </div>
                         <button className='btn yellow darken-2 z-depth-0' onClick={createPost}>Post</button>
                     </form>
                 </div>

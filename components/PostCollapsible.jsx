@@ -1,12 +1,9 @@
 import React, { useEffect } from "react"
 import { useAuthState } from "react-firebase-hooks/auth"
-import PostStyles from '../css/Posts.module.css'
-import getRates, { returnRates } from "../Scripts/currency"
+import { returnRates } from "../Scripts/currency"
 import { auth, db } from "../Scripts/firebaseconfig"
-import { deletePost } from "../Scripts/firebasedb"
 import Link from "next/link"
 import { useState } from "react"
-import { addToCart } from "../Scripts/firebaseauth"
 
 export default function Post (props) {
 
@@ -40,7 +37,10 @@ export default function Post (props) {
             const email = doc.data().email
             const displayName = doc.data().displayName
             const currency = doc.data().currency
-            return <Link href={`/users/${UID}`}>{displayName}</Link>
+            return (
+            <Link href={`/users/${UID}`}>
+                {displayName}
+            </Link>)
         }
         return `User ID ${UID} could not be found`
     }
@@ -63,43 +63,27 @@ export default function Post (props) {
 
     return (
         <React.Fragment>
-            <li key={Math.random()} className={PostStyles.post} data-postid={id}>
-                <div className={`collapsible-header ${PostStyles.post_header}`}>
-                    <div className={PostStyles.post_header_content} style={{float: 'left'}}>
-                        <span>
-                            {`${header} by `}
-                            <span>
-                                {userLink}
-                                {' '}
-                            </span>
-                        </span>
-                        <span style={{}}>
-                            {date}
-                        </span>
-                    </div>
-                    <div className={PostStyles.post_price_content}>
-                        {authUser ? (authUser.email==='theonlybaconsandwich@gmail.com' ? 
-                        <span 
-                            onClick={() => deletePost(id, user)}
-                            style={{fontWeight: 'bold', marginRight: '2rem', cursor: 'pointer'}}>✕</span> : ''):''}
-                        {computedPrice}
-                    </div>
+            <div key={id} className="group relative">
+              <div className="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
+                <img
+                  src={image}
+                  alt={header}
+                  className="w-full h-full object-center object-cover lg:w-full lg:h-full"
+                />
+              </div>
+              <div className="mt-4 flex justify-between">
+                <div>
+                  <h3 className="text-base m-0">
+                    <a className="text-gray-700" href={`post/${id}`}>
+                      <span aria-hidden="true" className="absolute inset-0" />
+                      {header}
+                    </a>
+                  </h3>
+                  <p className="mt-1 text-sm text-gray-500">{userLink}</p>
                 </div>
-                <div className={`collapsible-body ${PostStyles.post_body}`}>
-                    <div className={PostStyles.post_header}>
-                        <div className={PostStyles.post_buttons}>
-                            <button className='btn pulse red waves-effect modal-trigger' data-target='modal-buy'>Buy now</button>
-                            <button className='btn pulse orange waves-effect' onClick={() => addToCart(id)}>Add to cart</button>
-                        </div>
-                        <span className={PostStyles.post_body_content}>
-                            {
-                                `${header}
-                                ${description}`
-                            }
-                        </span>
-                    </div>
-                </div>
-            </li>
+                <p className="text-sm font-medium text-gray-900">{computedPrice}</p>
+              </div>
+            </div>
         </React.Fragment>
     )
 }

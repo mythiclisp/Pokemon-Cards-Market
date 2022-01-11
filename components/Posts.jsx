@@ -46,24 +46,17 @@ export default function Posts(props) {
 
     return (
         <React.Fragment>
-            <ul className={`collapsible popout posts-container ${PostStyles.posts_container}`}>
-                {posts && posts.map((post) => (
-                    <a key={post.id} className="group">
-                    <div className="w-full aspect-w-1 aspect-h-1 bg-gray-200 rounded-lg overflow-hidden xl:aspect-w-7 xl:aspect-h-8">
-                        <img
-                        src={post.image}
-                        alt={post.header}
-                        className="w-full h-full object-center object-cover group-hover:opacity-75"
-                        />
-                    </div>
-                    <h3 className="mt-4 text-sm text-gray-700">{post.header}</h3>
-                    <p className="mt-1 text-lg font-medium text-gray-900">{post.price}</p>
-                    </a>
-                ))}
-                {props.cart ? 
-                cartPosts && cartPosts.map(post => <Post key={post.id} postId={post.id} data={post}/>)
-                : posts && posts.map(post => <Post key={post.id} postId={post.id} data={post}/>)}
-            </ul>
+            <div className="bg-white">
+            <div className="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
+                <h2 className="text-2xl font-extrabold tracking-tight text-gray-900">Customers also purchased</h2>
+
+                <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+                    {props.cart ? 
+                    cartPosts && cartPosts.map(post => <Post key={post.id} postId={post.id} data={post}/>)
+                    : posts && posts.map(post => <Post key={post.id} postId={post.id} data={post}/>)}
+                </div>
+            </div>
+            </div>
         </React.Fragment>
     )
 }
