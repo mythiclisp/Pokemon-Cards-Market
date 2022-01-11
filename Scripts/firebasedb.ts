@@ -43,7 +43,7 @@ export async function deletePosts() {
 
             if(doc.id != 'initial') {
                 let data = doc.data()
-                data.posts = ''
+                data.cart = []
                 db.collection('Users').doc(doc.id).set(data)
             }
         })
@@ -89,7 +89,8 @@ export async function addTemplatePosts(user) {
         header: 'Post header',
         image: 'https://firebasestorage.googleapis.com/v0/b/pokemon-cards-market.appspot.com/o/wp2356164-gym-workout-wallpapers.jpg?alt=media&token=d466efaf-65f3-4b0f-a75f-27aa7d608f80',
         price: '1000',
-        user: user.uid
+        user: user.uid,
+        condition: 'Mint condition'
     }
     addPost(data).then((res) => {
 
@@ -127,16 +128,34 @@ export function getCart(user) {
                 let postId = res.data().cart[i]
 
                 db.collection('Posts').doc(postId).get().then(res => {
-                    
-                    let data = res.data()
-                    Object.assign(data, {id: res.id});
-                    postDataList.push(data)
-                    if(i+1===postsList.length) {
 
-                        resolve(postDataList)
+                    if (res.exists) {
+
+                        let data = res.data()
+                        Object.assign(data, {id: res.id});
+                        postDataList.push(data)
+
+                        if(i+1===postsList.length) {
+
+                            resolve(postDataList)
+                        }
+                    } else {
+
+                        deleteCartItem(i, user)
                     }
                 })
             }
         })
+    })
+}
+
+export function deleteCartItem(index, user) {
+
+    db.collection('Users').doc(user.uid).get().then(res => {
+
+        let data = res.data()
+        data.cart.splice(index, 1)
+
+        db.collection('Users').doc(user.uid).set(data)
     })
 }

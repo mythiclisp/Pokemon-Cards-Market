@@ -10,15 +10,6 @@ import Link from 'next/link'
 import { addToCart } from '../../Scripts/firebaseauth'
 
 const product = {
-  name: 'Basic Tee',
-  price: '$35',
-  rating: 3.9,
-  reviewCount: 512,
-  href: '#',
-  breadcrumbs: [
-    { id: 1, name: 'Women', href: '#' },
-    { id: 2, name: 'Clothing', href: '#' },
-  ],
   images: [
     {
       id: 1,
@@ -38,34 +29,8 @@ const product = {
       imageAlt: "Front of women's Basic Tee in black.",
       primary: false,
     },
-  ],
-  colors: [
-    { name: 'Black', bgColor: 'bg-gray-900', selectedColor: 'ring-gray-900' },
-    { name: 'Heather Grey', bgColor: 'bg-gray-400', selectedColor: 'ring-gray-400' },
-  ],
-  sizes: [
-    { name: 'XXS', inStock: true },
-    { name: 'XS', inStock: true },
-    { name: 'S', inStock: true },
-    { name: 'M', inStock: true },
-    { name: 'L', inStock: true },
-    { name: 'XL', inStock: false },
-  ],
-  description: `
-    <p>The Basic tee is an honest new take on a classic. The tee uses super soft, pre-shrunk cotton for true comfort and a dependable fit. They are hand cut and sewn locally, with a special dye technique that gives each tee it's own look.</p>
-    <p>Looking to stock your closet? The Basic tee also comes in a 3-pack or 5-pack at a bundle discount.</p>
-  `,
-  details: [
-    'Only the best materials',
-    'Ethically and locally made',
-    'Pre-washed and pre-shrunk',
-    'Machine wash cold with similar colors',
-  ],
+  ]
 }
-const policies = [
-  { name: 'International delivery', icon: GlobeIcon, description: 'Get your order in 2 years' },
-  { name: 'Loyalty rewards', icon: CurrencyDollarIcon, description: "Don't look at other tees" },
-]
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -125,20 +90,19 @@ export default function Example() {
     }, [authUser])
     useEffect(() => {
         if (authUser) {
-            returnRates(authUser).then(res => {
-            
-                let calcPrice = Math.round(res.rate * parseFloat(Math.round(post.data().price * 100)/100) * 100) /100
-                const symbol = res.symbol
-    
-                setPrice(`${symbol} ${calcPrice}`)
-                console.log(post)
-            })      
+            if (post) {
+                returnRates(authUser).then(res => {
+              
+                    let calcPrice = Math.round(res.rate * parseFloat(Math.round(post.data().price * 100)/100) * 100) /100
+                    const symbol = res.symbol
+        
+                    setPrice(`${symbol} ${calcPrice}`)
+                    console.log(post)
+                })    
+            }
         }
 
     }, [post])
-
-  const [selectedColor, setSelectedColor] = useState(product.colors[0])
-  const [selectedSize, setSelectedSize] = useState(product.sizes[2])
 
   return (
     <React.Fragment>
@@ -181,6 +145,12 @@ export default function Example() {
                 >
                 Add to cart
                 </button>
+                <button
+                className="modal-trigger mt-8 w-full bg-red-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                data-target='modal-buy'
+                >
+                Buy now
+                </button>
 
                 {/* Product details */}
                 <div className="mt-10">
@@ -201,25 +171,6 @@ export default function Example() {
                     </ul>
                     </div>
                 </div>
-
-                {/* Policies */}
-                <section aria-labelledby="policies-heading" className="mt-10">
-                    <h2 id="policies-heading" className="sr-only">
-                    Our Policies
-                    </h2>
-
-                    <dl className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-                    {policies.map((policy) => (
-                        <div key={policy.name} className="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center">
-                        <dt>
-                            <policy.icon className="mx-auto h-6 w-6 flex-shrink-0 text-gray-400" aria-hidden="true" />
-                            <span className="mt-4 text-sm font-medium text-gray-900">{policy.name}</span>
-                        </dt>
-                        <dd className="mt-1 text-sm text-gray-500">{policy.description}</dd>
-                        </div>
-                    ))}
-                    </dl>
-                </section>
                 </div>
             </div>
             </div>

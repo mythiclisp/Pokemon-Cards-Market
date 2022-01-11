@@ -7,6 +7,7 @@ import { auth } from '../Scripts/firebaseconfig'
 
 export default function Nav() {
 
+
     let [user] = useAuthState(auth)
 
     return (

@@ -74,10 +74,12 @@ export default function Post (props) {
               <div className="mt-4 flex justify-between">
                 <div>
                   <h3 className="text-base m-0">
-                    <a className="text-gray-700" href={`post/${id}`}>
-                      <span aria-hidden="true" className="absolute inset-0" />
-                      {header}
-                    </a>
+                    <Link href={`../post/${id}`}>
+                      <span className="text-gray-700">
+                        <span aria-hidden="true" className="absolute inset-0" />
+                        {header}
+                      </span>
+                    </Link>
                   </h3>
                   <p className="mt-1 text-sm text-gray-500">{userLink}</p>
                 </div>
