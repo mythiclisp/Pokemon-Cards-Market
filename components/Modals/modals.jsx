@@ -7,6 +7,8 @@ import {sendPasswordReset, changeDisplayName, createPost, changeCurrency} from '
 
 const Modals = () => {
 
+    console.log(typeof createPost)
+
     const [user] = useAuthState(auth)
 
     function handleSubmit(e) {
@@ -243,7 +245,7 @@ const Modals = () => {
                                             <input type="email" id='forgot-password-email 1' />
                                             <label htmlFor="forgot-password-email">Email</label>
                                         </div>
-                                        <button className="btn yellow darken-2 z-depth-0" onClick={() => sendPasswordReset}>Send reset email</button>
+                                        <button className="btn yellow darken-2 z-depth-0" onClick={sendPasswordReset}>Send reset email</button>
                                     </div>
                                 </div>
                             </li>
@@ -272,7 +274,7 @@ const Modals = () => {
                                         <input type="email" id='forgot-password-email' />
                                         <label htmlFor="forgot-password-email 2">Email</label>
                                     </div>
-                                    <button className="btn yellow darken-2 z-depth-0" onClick={() => sendPasswordReset}>Send reset email</button>
+                                    <button className="btn yellow darken-2 z-depth-0" onClick={sendPasswordReset}>Send reset email</button>
                                 </div>
                             </div>
                         </li>
@@ -282,7 +284,7 @@ const Modals = () => {
                                 <div className='forgot-password-form'>
                                         <label htmlFor="forgot-password-email">Display name</label>
                                         <input type="email" id='forgot-password-email 3' placeholder={user ? user.displayName : null} />
-                                    <button className="btn yellow darken-2 z-depth-0" onClick={() => changeDisplayName}>Change</button>
+                                    <button className="btn yellow darken-2 z-depth-0" onClick={changeDisplayName}>Change</button>
                                 </div>
                             </div>
                         </li>
@@ -488,7 +490,7 @@ const Modals = () => {
                             <input type="text" id='condition'/>
                             <label htmlFor="condition">Card Condition</label>
                         </div>
-                        <button className='btn yellow darken-2 z-depth-0' onClick={() => createPost}>Post</button>
+                        <button className='btn yellow darken-2 z-depth-0' onClick={createPost}>Post</button>
                     </form>
                 </div>
             </div>

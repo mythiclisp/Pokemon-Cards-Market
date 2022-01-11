@@ -85,11 +85,12 @@ export async function addTemplatePosts(user) {
     let data = {
         createdAt: new Date(),
         date: getDate(),
-        description: 'Post body',
-        header: 'Post header',
-        image: 'https://firebasestorage.googleapis.com/v0/b/pokemon-cards-market.appspot.com/o/wp2356164-gym-workout-wallpapers.jpg?alt=media&token=d466efaf-65f3-4b0f-a75f-27aa7d608f80',
-        price: '1000',
+        description: 'Charizard Mega EX 1999',
+        header: 'Charizard from 1999, mint condition and good price',
+        image: 'https://firebasestorage.googleapis.com/v0/b/pokemon-cards-market.appspot.com/o/charizard_cropped.jpg?alt=media&token=63e69398-e13b-4fa2-96ae-11dee91f2827',
+        price: '250',
         user: user.uid,
+        userDisplayName: user.displayName,
         condition: 'Mint condition'
     }
     addPost(data).then((res) => {

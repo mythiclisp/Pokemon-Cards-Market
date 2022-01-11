@@ -2,6 +2,7 @@ import React, { useEffect } from "react"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { returnRates } from "../Scripts/currency"
 import { auth, db } from "../Scripts/firebaseconfig"
+import { deleteCartItem } from "../Scripts/firebasedb"
 import Link from "next/link"
 import { useState } from "react"
 
@@ -9,7 +10,9 @@ export default function Post (props) {
 
     let usersRef = db.collection('Users')
     let cartQuery = usersRef.where('cart', '==', ``)
+
     cartQuery.get().then(users => {
+
         users.forEach(user => {
             let data = user.data()
             db.collection('Users').doc(user.data().id).set(data)
@@ -19,6 +22,7 @@ export default function Post (props) {
     //Define props
     const {header, date, description, image, user, price} = props.data
     const id = props.postId
+    const index = props.index
 
     let [authUser] = useAuthState(auth)
 
@@ -63,29 +67,39 @@ export default function Post (props) {
 
     return (
         <React.Fragment>
+          <div className="grid grid-auto-row row-gap-10">
             <div key={id} className="group relative">
-              <div className="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
-                <img
-                  src={image}
-                  alt={header}
-                  className="w-full h-full object-center object-cover lg:w-full lg:h-full"
-                />
-              </div>
-              <div className="mt-4 flex justify-between">
-                <div>
-                  <h3 className="text-base m-0">
-                    <Link href={`../post/${id}`}>
-                      <span className="text-gray-700">
-                        <span aria-hidden="true" className="absolute inset-0" />
-                        {header}
-                      </span>
-                    </Link>
-                  </h3>
-                  <p className="mt-1 text-sm text-gray-500">{userLink}</p>
+                <div className="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
+                  <img
+                    src={image}
+                    alt={header}
+                    className="w-full h-full object-center object-cover lg:w-full lg:h-full"
+                  />
                 </div>
-                <p className="text-sm font-medium text-gray-900">{computedPrice}</p>
-              </div>
+                <div className="mt-4 flex justify-between">
+                  <div>
+                    <h3 className="text-base m-0">
+                      <Link href={`../post/${id}`}>
+                        <span className="text-gray-700">
+                          <span aria-hidden="true" className="absolute inset-0" />
+                          {header}
+                        </span>
+                      </Link>
+                    </h3>
+                    <p className="mt-1 text-sm text-gray-500">{userLink}</p>
+                  </div>
+                  <p className="text-sm font-medium text-gray-900">{computedPrice}</p>
+                
+                </div>
             </div>
+            <div className="w-full h-full flex items-end">
+              <button
+                className="modal-trigger max-h-2 w-full bg-red-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                data-target='modal-buy'
+                onClick={() => deleteCartItem(index, authUser)}
+              >Remove from cart</button>
+            </div>
+          </div>
         </React.Fragment>
     )
 }

@@ -150,6 +150,7 @@ export const createPost = async (e: any) => {
     await fileRef.put(postImage)
     const fileURL = await fileRef.getDownloadURL()
 
+
     returnRates(auth.currentUser).then((response: any) => {
 
         const postHeader = e.target.parentNode['post-header'].value
@@ -164,6 +165,7 @@ export const createPost = async (e: any) => {
             image: fileURL,
             price: postPrice,
             user: auth.currentUser.uid,
+            userDisplayName: auth.currentUser.displayName,
             date: getDate(),
             createdAt: new Date(),
             condition: condition

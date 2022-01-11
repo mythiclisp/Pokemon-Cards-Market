@@ -58,10 +58,9 @@ export default function Example() {
 
         const userRef = db.collection('Users').doc(UID)
         const doc = await userRef.get()
+
         if (doc.data()) {
-            const email = doc.data().email
             const displayName = doc.data().displayName
-            const currency = doc.data().currency
             return (
             <Link href={`/users/${UID}`}>
                 {displayName}
@@ -70,14 +69,12 @@ export default function Example() {
         return `User ID ${UID} could not be found`
     }
     
-    
     useEffect(() => {
         if (authUser) {
             
             db.collection('Posts').doc(id).get().then(res => {
 
                 setPost(res)
-                console.log(post)
             })   
         }
         if (authUser) {
@@ -91,13 +88,15 @@ export default function Example() {
     useEffect(() => {
         if (authUser) {
             if (post) {
+                console.log(post.data().createdAt)
+                console.log(new Date())
+
                 returnRates(authUser).then(res => {
               
                     let calcPrice = Math.round(res.rate * parseFloat(Math.round(post.data().price * 100)/100) * 100) /100
                     const symbol = res.symbol
         
                     setPrice(`${symbol} ${calcPrice}`)
-                    console.log(post)
                 })    
             }
         }
@@ -108,13 +107,22 @@ export default function Example() {
     <React.Fragment>
         {post ?
         <div className="bg-white">
+            
         <div className="pt-6 pb-16 sm:pb-24">
             <div className="mt-8 max-w-2xl mx-auto px-4 sm:px-6 lg:max-w-7xl lg:px-8">
             <div className="lg:grid lg:grid-cols-12 lg:auto-rows-min lg:gap-x-8">
                 <div className="lg:col-start-8 lg:col-span-5">
                     <div className="flex justify-between">
-                        <h1 className="text-xl font-medium text-gray-900">{post.data().header}</h1>
+                        <h1 className="text-xl font-medium text-gray-900 max-w-xs">{post.data().header}</h1>
                         <p className="text-xl font-medium text-gray-900">{computedPrice}</p>
+                    </div>
+                </div>
+                <div className="mt-10 lg:col-start-8 lg:col-span-5">
+                    <div className="flex justify-between">
+                        <h1 className="text-xl font-medium text-gray-900 max-w-xs">
+                            {`Created on ${typeof post.data().createdAt} by `}
+                            {userLink}
+                        </h1>
                     </div>
                 </div>
 
