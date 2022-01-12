@@ -2,6 +2,9 @@ import { auth, db, functions, storage } from './firebaseconfig'
 import { returnRates } from './currency'
 import * as _ from 'lodash'
 import getDate from './dates'
+const Filter = require('bad-words')
+const filter = new Filter()
+
 export async function addPost(post) {
     const { id } = await db.collection("Posts").add(post)
     return id
@@ -144,7 +147,6 @@ export const createPost = async (e: any) => {
 
     //Putting post image in storage bucket
     const postImage = e.target.parentNode['post-image'].files[0]
-    console.log(postImage)
     const storageRef = storage.ref()
     const fileRef = storageRef.child(postImage.name)
     await fileRef.put(postImage)
@@ -159,29 +161,41 @@ export const createPost = async (e: any) => {
         const condition = e.target.parentNode['condition'].value
         let postId
 
-        addPost({
-            description: postBody,
-            header: postHeader,
-            image: fileURL,
-            price: postPrice,
-            user: auth.currentUser.uid,
-            userDisplayName: auth.currentUser.displayName,
-            date: getDate(),
-            createdAt: new Date(),
-            condition: condition
-        }).then((res) => {
+        let isProfane = false
+        if (filter.isProfane(postHeader)) isProfane = true
+        if (filter.isProfane(postBody)) isProfane = true
+        if (filter.isProfane(condition)) isProfane = true
 
-            postId = res
-            let userData
+        if (isProfane === false) {
 
-            const modal = document.querySelector('#modal-createpost');
-            M.Modal.getInstance(modal).close();
+            addPost({
+                description: postBody,
+                header: postHeader,
+                image: fileURL,
+                price: postPrice,
+                user: auth.currentUser.uid,
+                userDisplayName: auth.currentUser.displayName,
+                date: getDate(),
+                createdAt: new Date(),
+                condition: condition
+            }).then((res) => {
+    
+                postId = res
+                let userData
+    
+                const modal = document.querySelector('#modal-createpost');
+                M.Modal.getInstance(modal).close();
+    
+                M.toast({html: 'Post succesfully created'})
+            }).catch(() => {
+    
+                M.toast({html: 'Post could not be created'})
+            })
+        } else {
+            M.toast({html:'Innapropriate language detected in post, please revise text'})
+        }
 
-            M.toast({html: 'Post succesfully created'})
-        }).catch(() => {
-
-            M.toast({html: 'Post could not be created'})
-        })
+        
     })
 }
 
@@ -270,7 +284,6 @@ auth.onAuthStateChanged(user => {
             data.displayName = auth.currentUser.displayName,
             data.currency = JSON.parse(window.localStorage.getItem(auth.currentUser.email)).currency
             data.imageURL = auth.currentUser.photoURL
-            console.log(data)
             db.collection('Users').doc(auth.currentUser.uid).set(data)
         })
     }

@@ -7,8 +7,6 @@ import {sendPasswordReset, changeDisplayName, createPost, changeCurrency} from '
 
 const Modals = () => {
 
-    console.log(typeof createPost)
-
     const [user] = useAuthState(auth)
 
     function handleSubmit(e) {
