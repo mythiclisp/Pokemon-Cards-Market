@@ -89,7 +89,7 @@ export function signUp(e: any) {
                 const modal: HTMLElement = document.querySelector('#modal-signup');
                 M.Modal.getInstance(modal).close();
                 signUpForm.reset()
-    
+
                 db.collection('Users').doc(auth.currentUser.uid).set({
                     email: email,
                     password: password,
@@ -100,12 +100,12 @@ export function signUp(e: any) {
                 })
                 //Set the display name and PFP
                 return response.user.updateProfile({
-    
+
                     displayName: displayName,
                     photoURL: fileURL
                 })
             }).catch(err => {
-    
+
                 M.toast({html: handleErrs(err)})
             })
         })
@@ -242,7 +242,7 @@ export const addToCart = (postId) => {
     db.collection('Users').doc(auth.currentUser.uid).get().then(doc => {
 
         const data = doc.data()
-        
+
         if (data.cart.includes(postId)===false) {
 
             data.cart.push(postId)
@@ -269,6 +269,8 @@ auth.onAuthStateChanged(user => {
             data.email = auth.currentUser.email
             data.displayName = auth.currentUser.displayName,
             data.currency = JSON.parse(window.localStorage.getItem(auth.currentUser.email)).currency
+            data.imageURL = auth.currentUser.photoURL
+            console.log(data)
             db.collection('Users').doc(auth.currentUser.uid).set(data)
         })
     }
