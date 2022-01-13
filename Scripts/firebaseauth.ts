@@ -179,23 +179,23 @@ export const createPost = async (e: any) => {
                 createdAt: new Date(),
                 condition: condition
             }).then((res) => {
-    
+
                 postId = res
                 let userData
-    
+
                 const modal = document.querySelector('#modal-createpost');
                 M.Modal.getInstance(modal).close();
-    
+
                 M.toast({html: 'Post succesfully created'})
             }).catch(() => {
-    
+
                 M.toast({html: 'Post could not be created'})
             })
         } else {
             M.toast({html:'Innapropriate language detected in post, please revise text'})
         }
 
-        
+
     })
 }
 
@@ -270,7 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
     var elems = document.querySelectorAll('.collapsible');
     M.Collapsible.init(elems);
 
-    var elems = document.querySelectorAll('.modal');
+    var elems = document.querySelectorAll('.modal-elem');
     M.Modal.init(elems);
 
     M.AutoInit()
