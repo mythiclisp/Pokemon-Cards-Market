@@ -22,7 +22,6 @@ export default function Post (props) {
     let [userLink, setUserLink] = useState(<Link href='/Users/undefined'>User</Link>)
 
     let [admin] = useState(authUser.email==='theonlybaconsandwich@gmail.com')
-    console.log(admin, props.cart)
 
     //Returns user link
     async function getData(UID) {

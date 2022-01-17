@@ -25,6 +25,7 @@ function MyApp({ Component, pageProps }) {
       <Head>
         <title>Pokemon Cards Market</title>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+        <script src="https://js.stripe.com/v3/"></script>
         <meta httpEquiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
       </Head>
       <Layout>

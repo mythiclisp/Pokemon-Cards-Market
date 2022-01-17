@@ -4,9 +4,20 @@ import React, { useEffect } from 'react'
 import { auth, db, functions } from '../Scripts/firebaseconfig'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { deletePosts, addTemplatePosts } from '../Scripts/firebasedb'
+import { createCheckout } from '../Scripts/firebasefunctions'
 import Posts from '../components/Posts.jsx'
 export default function Home() {
   const [user] = useAuthState(auth)
+  const callFunction = () => {
+
+    console.log('asdfasdf')
+
+    const sayHello = functions.httpsCallable('sayHello')
+    sayHello({name: 'Kalan'}).then(res => {
+
+        console.log(res.data)
+    })
+}
 
   return (
     <React.Fragment>
@@ -50,6 +61,9 @@ export default function Home() {
         </React.Fragment>}
 
       </div>
+      <button className='text-center text-slate-50 rounded px-10 py-5 w-auto bg-indigo-500' onClick={createCheckout}>
+            Checkout
+      </button>
       <h3>Posts</h3>
       {user ?
       <Posts limit={10} sort='createdAt'/>:
