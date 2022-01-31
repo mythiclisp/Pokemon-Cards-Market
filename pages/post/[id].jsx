@@ -58,13 +58,15 @@ export default function Example() {
 
         const userRef = db.collection('Users').doc(UID)
         const doc = await userRef.get()
+        const postDoc = await db.collection('Posts').doc(id).get()
 
         if (doc.data()) {
             const displayName = doc.data().displayName
+            console.log(postDoc.data())
             return (
-            <Link href={`/users/${UID}`}>
+            <Link href={`/users/${postDoc.data().user}`}>
                 <a className='text-blue-500'>
-                    {displayName}
+                    {postDoc.data().userDisplayName}
                 </a>
             </Link>)
         }

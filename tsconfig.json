@@ -24,8 +24,8 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-, "Scripts/firebaseconfig", "Scripts/firebaseauth.js", "Scripts/firebasedb"  ],
+, "Scripts/firebaseconfig", "Scripts/firebaseauth.js", "Scripts/firebasedb", "pages/cart.tsx"  ],
   "exclude": [
-    "node_modules"
+    "node_modules", "pages/cart.tsx"
   ]
 }

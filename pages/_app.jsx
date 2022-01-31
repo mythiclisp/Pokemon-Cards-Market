@@ -26,6 +26,7 @@ function MyApp({ Component, pageProps }) {
         <title>Pokemon Cards Market</title>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
         <script src="https://js.stripe.com/v3/"></script>
+        <script src="https://unpkg.com/@themesberg/flowbite@latest/dist/flowbite.bundle.js"></script>
         <meta httpEquiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
       </Head>
       <Layout>

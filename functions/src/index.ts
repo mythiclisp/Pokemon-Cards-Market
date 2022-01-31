@@ -3,128 +3,117 @@ import * as functions from "firebase-functions";
 const admin = require("firebase-admin");
 admin.initializeApp();
 
+const addPost = async (post:any) => {
+  const {id} = await admin.firestore().collection("Orders").add(post);
+  return id;
+};
+
 // Config stripe with secret api key
 const stripe = require("stripe")(functions.config().stripe.secret_key);
-
-// Import express and cors
-import * as express from "express";
-import * as cors from "cors";
-
-const app = express();
-app.use(cors({origin: true}));
-
-
-app.post("/webhook", async (req, res) => {
-  const sig = req.headers["stripe-signature"] as string;
-
-
-  const endpointSecret = "whsec_...";
-
-  let event;
-
-  try {
-    event =
-    stripe.webhooks.constructEvent(req.body.rawBody, sig, endpointSecret);
-  } catch (err) {
-    res.status(400).end();
-    return;
-  }
-
-  // Handle Type of webhook
-
-  const intent = event.data.object;
-  let message;
-
-  switch (event.type) {
-    case "payment_intent.succeeded":
-
-      // Update database
-      // Send email
-      // Notify shipping department
-
-      console.log("Succeeded:", intent.id);
-      break;
-    case "payment_intent.payment_failed":
-      message =
-      intent.last_payment_error && intent.last_payment_error.message;
-      console.log("Failed:", intent.id, message);
-      break;
-  }
-
-  res.sendStatus(200);
-});
+const endPointSecret = "whsec_AFm2MpbUuVS1mgdp8k8dVSsIkaeRUudr";
 
 export const createStripeCheckout =
-functions.https.onCall(async (data, context) => {
-  console.log("hello logs!");
+functions.https.onCall(async (data:any, context:any) => {
   // Stripe init
   const session = await stripe.checkout.sessions.create({
-    payment_method_types: ["card"],
-    mode: "payment",
-    success_url: "http://localhost:3000/payment/success",
-    cancel_url: "http://localhost:3000/payment/failure",
-    shipping_address_collection: {
-      allowed_countries: ["US", "CA"],
+    "payment_method_types": ["card"],
+    "mode": "payment",
+    "success_url": "http://localhost:3000/",
+    "cancel_url": "http://localhost:3000/",
+    "payment_intent_data": {
+      "metadata": {
+        "userId": data[1].userId,
+      },
     },
-    line_items: [
-      {
-        quantity: 1,
-        price_data: {
-          currency: "usd",
-          unit_amount: (100) * 100, // 10000 = 100 USD
-          product_data: {
-            name: "New camera",
+    "shipping_address_collection": {
+      "allowed_countries": ["US", "CA"],
+    },
+    "line_items":
+      (data[0] ? data[0] : [
+        {
+          quantity: 1,
+          price_data: {
+            currency: "usd",
+            unit_amount: (100) * 100, // 10000 = 100 USD
+            product_data: {
+              name: "post.header",
+            },
           },
         },
-      },
-      {
-        quantity: 1,
-        price_data: {
-          currency: "usd",
-          unit_amount: (100) * 100, // 10000 = 100 USD
-          product_data: {
-            name: "New phone",
-          },
-        },
-      },
-    ],
+      ]),
   });
-
   return (session ?
     {id: session.id} :
     "no res");
 });
 
 export const stripeWebhook =
-functions.https.onRequest(async (req:any, res:any) => {
-  const stripe = require("stripe")(functions.config().stripe.token);
-  let event;
-
-  try {
-    const whSec = functions.config().stripe.payments_webhook_secret;
-
-    event = stripe.webhooks.constructEvent(
-        req.rawBody,
-        req.headers["stripe-signature"],
-        whSec,
-    );
-  } catch (err) {
-    console.error(" Webhook signature verification failed.");
-    return res.send("failed");
+functions.https.onRequest(async (request:any, response:any) => {
+  let event = request.body;
+  if (endPointSecret) {
+    const signature = request.headers["stripe-signature"];
+    try {
+      // Test validity of stripe signature
+      event = stripe.webhooks.constructEvent(
+          request.rawBody,
+          signature,
+          endPointSecret
+      );
+    } catch (err) {
+      // If unvalid
+      console.log("⚠️  Webhook signature verification failed.", err);
+      return response.sendStatus(400);
+    }
   }
+  // Check type of event
+  switch (event.type) {
+    case "payment_intent.succeeded":
 
-  const dataObject = event.data.object;
+      response.sendStatus(200);
+      const paymentIntent = event.data.object;
+      console.log(`PaymentIntent for ${paymentIntent.amount} was successful!`);
+      // Then define and call a method to handle the successful payment intent.
+      try {
+        // Try adding order data to firebase
+        addPost({
+          uid: event.data.object.metadata.userId,
+          shipping: event.data.object.shipping,
+          status: event.data.object.status,
+          amount: (event.data.object.amount/100),
+          currency: event.data.object.currency,
+          url: event.data.object.charges.url,
+          event: event,
+        }).then((response:any) => {
+          console.log("Added order to database");
 
-  await admin.firestore().collection("Orders").add({
-    checkoutSessionId: dataObject.id,
-    paymentStatus: dataObject.payment_status,
-    shippingInfo: dataObject.shipping,
-    amountTotal: dataObject.amount_total,
-  });
+          admin.firestore().collection("Users")
+              .doc(event.data.object.metadata.userId)
+              .get()
+              .then((res:any) => {
+                const data = res.data();
+                data.orders.push(response);
+                console.log(data, response);
 
-  console.log(dataObject);
-  return res.send("succeeded???");
+                admin.firestore().collection("Users")
+                    .doc(event.data.object.metadata.userId)
+                    .set(data).then(() => {
+                      console.log("Succesfully updated users order page");
+                    });
+              });
+        });
+      } catch (err) {
+        // If fail, add unformated data to db and log error
+        admin.firestore().collection("Orders").doc().set({
+          event: event,
+        });
+        console.log(`Couldn't add data to firestore + ${err}`);
+      }
+      break;
+    case "payment_method.attached":
+      break;
+    default:
+      // Unexpected event type
+      console.log(`Unhandled event type ${event.type}.`);
+  }
 });
-
-export const payment = functions.https.onRequest(app);
 

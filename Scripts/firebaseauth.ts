@@ -11,11 +11,6 @@ export async function addPost(post) {
 }
 let errStop = false
 
-auth.onAuthStateChanged(user => {
-    if (user) {
-    }
-});
-
 export function handleErrs(err: Object) {
 
     //Stops errors from accumulating
@@ -99,6 +94,7 @@ export function signUp(e: any) {
                     displayName: displayName,
                     currency: currency,
                     cart: [],
+                    orders: [],
                     imageURL: fileURL
                 })
                 //Set the display name and PFP
@@ -240,10 +236,11 @@ export const changeCurrency = async (e: any) => {
     if (proposedCurrency === undefined) proposedCurrency = e.target.parentNode.children[0].children[0].value
     proposedCurrency = proposedCurrency.substring(0,3)
 
-    db.collection('Users').doc(auth.currentUser.uid).set({
-        email: auth.currentUser.email,
-        displayName: auth.currentUser.displayName,
-        currency: proposedCurrency
+    db.collection('Users').doc(auth.currentUser.uid).get().then(res => {
+
+        let data = res.data()
+        data.currency = proposedCurrency
+        db.collection('Users').doc(auth.currentUser.uid).set(data)
     })
 
     M.toast({html: `Successfully changed currency to ${proposedCurrency}`})
@@ -298,4 +295,32 @@ export async function addImageToStorage(file) {
     const fileURL = await fileRef.getDownloadURL()
 
     return fileURL
+}
+
+db.collection('Orders').get().then((res:object[]) => {
+
+    res.forEach((order:any) => {
+
+    })
+})
+
+export function reloadOrders() {
+
+
+    db.collection("Orders").get().then(response => {
+
+        response.forEach(order => {
+
+            db.collection("Users").doc(order.data().uid).get().then(resolve2 => {
+
+                let data = resolve2.data()
+
+                if (data.orders.includes(order.id)===false) {
+
+                    data.orders.push(order.id)
+                    db.collection("Users").doc(order.data().uid).set(data)
+                }
+            })
+        })
+    })
 }

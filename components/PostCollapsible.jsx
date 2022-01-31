@@ -40,6 +40,8 @@ export default function Post (props) {
         return `User ID ${UID} could not be found`
     }
 
+    console.log(admin || props.cart ? true : false)
+
     //Collects data for state variables
     useEffect(() => {
 
@@ -66,14 +68,21 @@ export default function Post (props) {
                     alt={header}
                     className="w-full h-full object-center object-cover lg:w-full lg:h-full"
                   />
-                  <div className="absolute left-0 top-0 w-full h-full select-none">
+                  {admin || props.cart ?
+                    <div className="absolute left-0 top-0 w-full h-full select-none">
                     <h1 style={{fontSize: '2rem'}} className="relative w-auto ml-5 mt-5 text-slate-50 hidden group-hover:block">
                       <span className="relative rounded opacity-50 cursor-pointer bg-black aspect-square h-full px-2">
-                        {props.cart ? <span className="opacity-100" onClick={() => deleteCartItem(index, authUser)}>✖</span> : 
-                        (admin ? <span className="opacity-100" onClick={() => deletePost(id, authUser.uid)}>✖</span>: null)}
+                        <span className="opacity-100"
+                        onClick={() => {
+                          props.cart ? deleteCartItem(index, authUser) :
+                          deletePost(id, authUser.id)}
+                        }
+                        >✖</span>
                       </span>
                     </h1>
-                  </div>
+                  </div> :
+                  <></>
+                  }
                 </div>
                 <div style={{gridTemplateColumns: '1.45fr .55fr'}} className="mt-4 grid grid-cols-2">
                   <div>

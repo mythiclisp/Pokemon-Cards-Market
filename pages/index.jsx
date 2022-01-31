@@ -1,4 +1,3 @@
-import Head from 'next/head'
 import Image from 'next/image'
 import React, { useEffect } from 'react'
 import { auth, db, functions } from '../Scripts/firebaseconfig'
@@ -6,23 +5,20 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { deletePosts, addTemplatePosts } from '../Scripts/firebasedb'
 import { createCheckout } from '../Scripts/firebasefunctions'
 import Posts from '../components/Posts.jsx'
-export default function Home() {
-  const [user] = useAuthState(auth)
-  const callFunction = () => {
+import { reloadOrders } from '../Scripts/firebaseauth'
 
-    console.log('asdfasdf')
-
-    const sayHello = functions.httpsCallable('sayHello')
-    sayHello({name: 'Kalan'}).then(res => {
-
-        console.log(res.data)
-    })
+function classNames(...classes) {
+  return classes.filter(Boolean).join(' ')
 }
+
+export default function Home() {
+
+  const [user] = useAuthState(auth)
 
   return (
     <React.Fragment>
       <h1>Home</h1>
-      {user ? (user.email === 'theonlybaconsandwich@gmail.com' ?
+      {user ? (user.email === 'user1@gmail.com' ?
       <React.Fragment>
         <h3>Admin Actions: </h3>
         <div className="container center-align prompts-container">
@@ -30,7 +26,10 @@ export default function Home() {
             Delete all posts
           </button>
           <button className='text-center text-slate-50 rounded px-10 py-5 w-auto bg-indigo-500' onClick={() => addTemplatePosts(user)}>
-            Add template post
+            Add template posts
+          </button>
+          <button className='text-center text-slate-50 rounded px-10 py-5 w-auto bg-indigo-500' onClick={() => reloadOrders()}>
+            Reload Orders
           </button>
           <button className='modal-trigger' data-target='modal-test'>Click for modal</button>
         </div>
@@ -68,7 +67,8 @@ export default function Home() {
       {user ?
       <Posts limit={10} sort='createdAt'/>:
       <h3>
-        Logn in to see posts</h3>
+        Login in to see posts
+      </h3>
       }
     </React.Fragment>
   )

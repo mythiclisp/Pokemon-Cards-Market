@@ -27,8 +27,8 @@ module.exports = {
   rules: {
     "quotes": ["error", "double"],
     "import/no-unresolved": 0,
+    "no-case-declarations": 0,
     "@typescript-eslint/no-var-requires": 0,
-    "typescript-eslint/no-explicit-any": 0,
     "@typescript-eslint/no-unused-vars": 0,
     "@typescript-eslint/no-explicit-any": 0,
   },

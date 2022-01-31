@@ -5,6 +5,7 @@ import React, { useEffect } from 'react'
 import loadAnimation from '../Scripts/Animations/main'
 import { useRouter } from 'next/router';
 import BreadCrumbs from './breadCrumbs'
+import Footer from './Footer'
 
 const Layout = ({children}) => {
 
@@ -23,6 +24,7 @@ const Layout = ({children}) => {
                     {children}
                 </main>
             </div>
+            <Footer />
         </React.Fragment>
     )
 }

@@ -13,14 +13,15 @@ export default function BreadCrumbs() {
     let router = useRouter()
     useEffect(() => {
         let array = router.asPath.split('/')
-        array.splice(0,1)
-        array.splice(-1,1)
+        console.log(array)
+        if (array[0]==='')array.splice(0,1)
+        if (array[array.length-1]==='') array.splice(-1,1)
         setUrlPath(array)
     }, [router])
 
     return (
         <React.Fragment>
-            {urlPath!=[] ? 
+            {urlPath!=[] ?
             <nav className="text-gray-500 my-8 bg-transparent" aria-label="Breadcrumb">
                 <ol className="list-none p-0 inline-flex ml-10">
                     <li className="flex items-center text-grey-500">
