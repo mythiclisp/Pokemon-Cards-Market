@@ -13,6 +13,7 @@ export default function Cart() {
 
     let checkout = useRef(null)
 
+
     function handleCheckout(e) {
 
         checkout.current.innerHTML = 'Loading Checkout'
@@ -26,10 +27,10 @@ export default function Cart() {
                 const createStripeCheckout = functions.httpsCallable('createStripeCheckout')
 
                 //For all data passes into cloud function
-                const list:object[] = []
 
                 //For line items
                 let postsList:object[] = []
+                let postIds:string[] = []
 
                 //Loop through cart items
                 response.forEach((post:any) => {
@@ -48,24 +49,25 @@ export default function Cart() {
                           },
                         },
                     })
+
+                    postIds.push(post.id)
                 })
 
-                list.push(postsList)
-
-                //Pass UID through stripe metadata
-                list.push({userId: user.uid})
+                const list:object[] = [{userId: user.uid, posts: postsList, postIds: postIds.join(',')}]
 
                 db.collection("Users").doc(user.uid).get().then((res:any) => {
 
                     list.push(res.data().currency)
                 })
 
+                console.log(list)
+
                 createStripeCheckout(list).then((res) => {
 
                     const sessionId = res.data.id
 
-                    //Redirect to stripe chechkout
-                    stripe.redirectToCheckout({ sessionId: sessionId })
+                    //Redirect to stripe chechout
+                    stripe.redirectToCheckout({sessionId: sessionId})
                 }).catch(err => {
 
                     console.log(err)

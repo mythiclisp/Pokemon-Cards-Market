@@ -1,6 +1,4 @@
-import navStyles from '../css/Nav.module.css'
 import Link from 'next/link'
-import Image from 'next/image'
 import React from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth } from '../Scripts/firebaseconfig'
@@ -53,10 +51,7 @@ export default function Nav() {
                         </div>
                         <Menu as="div" className="relative inline-block text-left">
                             <div>
-                                <Menu.Button className="focus:bg-gray-900 grid grid-cols-3 inline-flex justify-center w-full rounded-md  shadow-sm px-4 py-2 bg-gray-900 text-sm font-medium text-white">
-                                    <div>
-                                        <img style={{objectFit: 'cover',}} src={user.photoURL} alt="Profile picture" className='border-emerald-500 border-2 rounded-full h-8 w-8 rounded-full'/>
-                                    </div>
+                                <Menu.Button className="focus:bg-gray-900 inline-flex justify-center w-full rounded-md  shadow-sm px-4 py-2 bg-gray-900 text-sm font-medium text-white">
                                     Account
                                     <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
                                 </Menu.Button>
@@ -97,13 +92,24 @@ export default function Nav() {
                                     <Menu.Item>
                                     {({ active }) => (
                                         <a
+                                        href="/cart"
+                                        className={'text-gray-700 block px-4 py-2 text-sm'}
+                                        >
+                                        Shopping Cart
+                                        </a>
+                                    )}
+                                    </Menu.Item>
+                                    <Menu.Item>
+                                    {({ active }) => (
+                                        <a
                                         href="#"
                                         className={classNames(
                                             active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                                             'block px-4 py-2 text-sm'
                                         )}
+                                        onClick={() => auth.signOut()}
                                         >
-                                        License
+                                        Signout
                                         </a>
                                     )}
                                     </Menu.Item>
@@ -117,7 +123,7 @@ export default function Nav() {
                         </svg>
                         </> :
                         <>
-                        <div className='modal-trigger bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium' data-target='modal-login'>Login</div>
+                        <div className='modal-trigger bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium' data-target='modal-account'>Login</div>
                         <div className='modal-trigger bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium' data-target='modal-signup'>Sign up</div>
                         </>}
                     </div>

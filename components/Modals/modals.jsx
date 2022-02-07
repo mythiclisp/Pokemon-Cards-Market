@@ -26,7 +26,7 @@ const Modals = () => {
             {user ?
             <>
                 {/* //Account Modal */}
-                <div id="modal-account" className="modal">
+                <div id="modal-account" className="modal rounded-lg">
                     <div className="modal-content">
                         <h4>Account</h4>
                         <h6>
@@ -238,7 +238,7 @@ const Modals = () => {
                     </div>
                 </div>
                 {/* //Create Post Modal */}
-                <div id="modal-createpost" className="modal">
+                <div id="modal-createpost" className="modal rounded-lg">
                     <div className="modal-content">
                         <h4>Create Post</h4>
                         <form id="createpost-form" onSubmit={handleSubmit}>
@@ -268,7 +268,7 @@ const Modals = () => {
             </> :
             <>
                 {/* //Sign Up Modal */}
-                <div id="modal-signup" className='modal'>
+                <div id="modal-signup" className='modal rounded-lg'>
                     <div className="modal-content">
                         <h4>Sign up</h4><br />
                         <form id="signup-form" onSubmit={handleSubmit}>
@@ -462,7 +462,7 @@ const Modals = () => {
                     </div>
                 </div>
                 {/* //Login Modal */}
-                <div id="modal-login" className="modal">
+                <div id="modal-login" className="modal rounded-lg">
                     <div className="modal-content">
                         <h4>Login</h4><br />
                         <form id="login-form" onSubmit={handleSubmit}>

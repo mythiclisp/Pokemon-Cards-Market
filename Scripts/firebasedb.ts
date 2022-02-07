@@ -52,12 +52,6 @@ export async function deletePosts() {
 
 export async function deletePost(postId, userId) {
 
-    db.collection('Users').doc(userId).get().then(res => {
-
-        let data = res.data()
-        data.posts = data.posts.replace(`,${postId}`, '')
-        db.collection('Users').doc(userId).set(data)
-    })
     //Delete post from posts collection
     db.collection('Posts').doc(postId).delete()
 
@@ -185,6 +179,65 @@ export function getCart(user) {
     })
 }
 
+export function getOrders(uid) {
+
+    return new Promise((resolve, reject) => {
+
+        let ordersList = []
+        let postsList = [[],[[],[]]]
+
+        db.collection("Users").doc(uid).get().then(res => {
+
+            res.data().orders.forEach(order => {
+
+                ordersList.push(order)
+            })
+
+            for (let x=0;x<ordersList.length;x++) {
+
+                postsList[0].push([])
+
+                let order = ordersList[x]
+
+                db.collection("Orders").doc(order).get().then(res => {
+
+                    let postIdsList = res.data().event.data.object.metadata.posts.split(',')
+                    postsList[1][0].push(res.data().shippingStatus)
+
+                    for (let i=0;i<postIdsList.length;i++) {
+
+                        let postId = postIdsList[i]
+
+                        db.collection("Posts").doc(postId).get().then(res => {
+
+                            let data = res.data()
+                            data.id = res.id
+                            postsList[0][x].push(data)
+
+                            if (i>=postIdsList.length-1 && x>=ordersList.length-1) {
+
+                                for (let i=0;i<postsList[0].length;i++) {
+
+                                    let orderPrice = 0
+
+                                    for (let x=0;x<postsList[0][i].length;x++) {
+
+                                        orderPrice += postsList[0][i][x].price
+                                    }
+
+                                    postsList[1][1].push(orderPrice)
+                                }
+
+                                resolve(postsList)
+                            }
+                        })
+                    }
+                })
+            }
+        })
+    })
+}
+
 export function deleteCartItem(index, user) {
 
     db.collection('Users').doc(user.uid).get().then(res => {
@@ -195,3 +248,14 @@ export function deleteCartItem(index, user) {
         db.collection('Users').doc(user.uid).set(data)
     })
 }
+
+db.collection("Posts").get().then(res => {
+
+    res.forEach(post => {
+
+        let data = post.data()
+        Object.assign(data, {bought: false})
+
+        db.collection("Posts").doc(post.id).set(data)
+    })
+})

@@ -8,12 +8,11 @@ import { auth } from "../Scripts/firebaseconfig";
 export default function BreadCrumbs() {
 
     let [urlPath, setUrlPath] = useState([])
-    let [user] = useAuthState(auth)
 
     let router = useRouter()
     useEffect(() => {
+
         let array = router.asPath.split('/')
-        console.log(array)
         if (array[0]==='')array.splice(0,1)
         if (array[array.length-1]==='') array.splice(-1,1)
         setUrlPath(array)

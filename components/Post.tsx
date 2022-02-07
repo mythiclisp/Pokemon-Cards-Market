@@ -6,14 +6,14 @@ import { deleteCartItem, deletePost } from "../Scripts/firebasedb"
 import Link from "next/link"
 import { useState } from "react"
 
-export default function Post (props) {
+export default function Post(props) {
 
     //Define props
     const {header, date, description, image, user, price} = props.data
     const id = props.postId
     const index = props.index
 
-    let [authUser] = useAuthState(auth)
+    let [authUser]:any = useAuthState(auth)
 
     //The price and symbol of the post
     let [computedPrice, setPrice] = useState('Undefined')
@@ -21,17 +21,18 @@ export default function Post (props) {
     //Link to the user page
     let [userLink, setUserLink] = useState(<Link href='/Users/undefined'>User</Link>)
 
-    let [admin] = useState(authUser.email==='theonlybaconsandwich@gmail.com')
+    let [admin] = useState(authUser ? authUser.email==='theonlybaconsandwich@gmail.com':null)
 
     //Returns user link
     async function getData(UID) {
 
         const userRef = db.collection('Users').doc(UID)
         const doc = await userRef.get()
+
         if (doc.data()) {
-            const email = doc.data().email
+
             const displayName = doc.data().displayName
-            const currency = doc.data().currency
+
             return (
             <Link href={`/users/${UID}`}>
                 {displayName}
@@ -40,19 +41,18 @@ export default function Post (props) {
         return `User ID ${UID} could not be found`
     }
 
-    console.log(admin || props.cart ? true : false)
-
     //Collects data for state variables
     useEffect(() => {
 
-        returnRates(auth.currentUser).then((res) => {
-            let calcPrice = Math.round(res.rate * parseFloat(Math.round(price * 100)/100) * 100) /100
+        returnRates(auth.currentUser).then((res:any) => {
+
+            let calcPrice = Math.round(res.rate * parseFloat((Math.round(price * 100)/100 * 100).toString()) /100)
             const symbol = res.symbol
 
             setPrice(`${symbol} ${calcPrice}`)
         })
 
-        getData(user).then((res) => {
+        getData(user).then((res:any) => {
 
             setUserLink(res)
         })

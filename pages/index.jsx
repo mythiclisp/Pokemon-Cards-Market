@@ -7,10 +7,6 @@ import { createCheckout } from '../Scripts/firebasefunctions'
 import Posts from '../components/Posts.jsx'
 import { reloadOrders } from '../Scripts/firebaseauth'
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
-
 export default function Home() {
 
   const [user] = useAuthState(auth)
@@ -18,7 +14,7 @@ export default function Home() {
   return (
     <React.Fragment>
       <h1>Home</h1>
-      {user ? (user.email === 'user1@gmail.com' ?
+      {user ? (user.email === 'theonlybaconsandwich@gmail.com' ?
       <React.Fragment>
         <h3>Admin Actions: </h3>
         <div className="container center-align prompts-container">
@@ -60,9 +56,6 @@ export default function Home() {
         </React.Fragment>}
 
       </div>
-      <button className='text-center text-slate-50 rounded px-10 py-5 w-auto bg-indigo-500' onClick={createCheckout}>
-            Checkout
-      </button>
       <h3>Posts</h3>
       {user ?
       <Posts limit={10} sort='createdAt'/>:

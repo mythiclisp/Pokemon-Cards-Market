@@ -22,14 +22,15 @@ functions.https.onCall(async (data:any, context:any) => {
     "cancel_url": "http://localhost:3000/",
     "payment_intent_data": {
       "metadata": {
-        "userId": data[1].userId,
+        "userId": data[0].userId,
+        "posts": data[0].postIds,
       },
     },
     "shipping_address_collection": {
       "allowed_countries": ["US", "CA"],
     },
     "line_items":
-      (data[0] ? data[0] : [
+      (data[0].posts ? data[0].posts : [
         {
           quantity: 1,
           price_data: {
@@ -74,6 +75,20 @@ functions.https.onRequest(async (request:any, response:any) => {
       console.log(`PaymentIntent for ${paymentIntent.amount} was successful!`);
       // Then define and call a method to handle the successful payment intent.
       try {
+        const postIds = event.data.object.metaData.posts;
+        postIds.includes(",") ?
+        postIds.split(",") :
+        [postIds]
+            .forEach((postId: string) => {
+              admin.firestore().collection("Posts")
+                  .doc(postId).get().then((res:any) => {
+                    const data = res.data();
+                    data.bought = true;
+
+                    admin.firestore().collection("Posts")
+                        .doc(postId).set(data);
+                  });
+            });
         // Try adding order data to firebase
         addPost({
           uid: event.data.object.metadata.userId,
@@ -83,6 +98,9 @@ functions.https.onRequest(async (request:any, response:any) => {
           currency: event.data.object.currency,
           url: event.data.object.charges.url,
           event: event,
+          metadata: event.data.object.metaData,
+          shippingStatus:
+          "Waiting for seller to ship to card verification facility",
         }).then((response:any) => {
           console.log("Added order to database");
 
@@ -92,7 +110,6 @@ functions.https.onRequest(async (request:any, response:any) => {
               .then((res:any) => {
                 const data = res.data();
                 data.orders.push(response);
-                console.log(data, response);
 
                 admin.firestore().collection("Users")
                     .doc(event.data.object.metadata.userId)
@@ -103,10 +120,11 @@ functions.https.onRequest(async (request:any, response:any) => {
         });
       } catch (err) {
         // If fail, add unformated data to db and log error
+        console.log(event.data.object.metadata.userId);
         admin.firestore().collection("Orders").doc().set({
           event: event,
         });
-        console.log(`Couldn't add data to firestore + ${err}`);
+        console.log(`Couldn"t add data to firestore + ${err}`);
       }
       break;
     case "payment_method.attached":
@@ -116,4 +134,3 @@ functions.https.onRequest(async (request:any, response:any) => {
       console.log(`Unhandled event type ${event.type}.`);
   }
 });
-

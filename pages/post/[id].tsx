@@ -1,40 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { StarIcon } from '@heroicons/react/solid'
-import { RadioGroup } from '@headlessui/react'
-import { CurrencyDollarIcon, GlobeIcon } from '@heroicons/react/outline'
 import { useRouter } from 'next/router'
 import { useAuthState } from 'react-firebase-hooks/auth'
-import { auth, db } from '../../Scripts/firebaseconfig'
-import getRates, { returnRates } from "../../Scripts/currency"
+import { auth, db, functions } from '../../Scripts/firebaseconfig'
+import { returnRates } from "../../Scripts/currency"
 import Link from 'next/link'
 import { addToCart } from '../../Scripts/firebaseauth'
-
-const product = {
-  images: [
-    {
-      id: 1,
-      imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-01-featured-product-shot.jpg',
-      imageAlt: "Back of women's Basic Tee in black.",
-      primary: true,
-    },
-    {
-      id: 2,
-      imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-01-product-shot-01.jpg',
-      imageAlt: "Side profile of women's Basic Tee in black.",
-      primary: false,
-    },
-    {
-      id: 3,
-      imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-01-product-shot-02.jpg',
-      imageAlt: "Front of women's Basic Tee in black.",
-      primary: false,
-    },
-  ]
-}
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
+import { stripe } from '../../Scripts/firebasefunctions'
 
 export default function Example() {
 
@@ -42,15 +13,13 @@ export default function Example() {
     const { query } = useRouter();
     const { id } = query;
 
-    //Refrence to firestore collection
-    let postsRef = db.collection('Posts')
 
     //Make state variable for posts
-    let [post, setPost] = useState()
+    let [post, setPost]:any = useState()
 
     let [authUser] = useAuthState(auth)
 
-    let [computedPrice, setPrice] = useState(0)
+    let [computedPrice, setPrice] = useState('0')
 
     let [userLink, setUserLink] = useState()
 
@@ -73,6 +42,49 @@ export default function Example() {
         return `User ID ${UID} could not be found`
     }
 
+    function handleCheckout() {
+
+        if (post) {
+
+            let price:number = Math.round(Math.round(post.data().price * 100)/100 * 10000) /100
+
+            let postData = [
+                {
+                    postIds: post.id,
+                    posts: [{
+                        quantity: 1,
+                        price_data: {
+                            currency: "usd",
+                            unit_amount: (100) * (price / 100), // 10000 = 100 USD
+                            product_data: {
+                                name: post.data().header,
+                            },
+                        },
+                    }],
+                    userId: authUser.uid,
+                },
+                JSON.parse(window.localStorage.getItem(authUser.email)).currency,
+            ]
+
+            console.log(postData)
+
+            let createStripeCheckout = functions.httpsCallable('createStripeCheckout')
+
+            createStripeCheckout(postData).then((res) => {
+
+                const sessionId = res.data.id
+
+                //Redirect to stripe checkout
+                stripe.redirectToCheckout({sessionId: sessionId})
+            }).catch(err => {
+
+                console.log(err)
+
+                M.toast({html: 'Failed to create checkout'})
+            })
+        }
+    }
+
     useEffect(() => {
         if (authUser) {
 
@@ -83,7 +95,7 @@ export default function Example() {
         }
         if (authUser) {
 
-            getData(authUser.uid).then(res => {
+            getData(authUser.uid).then((res:any) => {
 
                 setUserLink(res)
             })
@@ -95,9 +107,9 @@ export default function Example() {
                 console.log(post.data().createdAt)
                 console.log(new Date())
 
-                returnRates(authUser).then(res => {
+                returnRates(authUser).then((res:any) => {
 
-                    let calcPrice = Math.round(res.rate * parseFloat(Math.round(post.data().price * 100)/100) * 100) /100
+                    let calcPrice = Math.round(res.rate * parseFloat((Math.round(post.data().price * 100)/100).toString()) * 100) /100
                     const symbol = res.symbol
 
                     setPrice(`${symbol} ${calcPrice}`)
@@ -118,7 +130,7 @@ export default function Example() {
                 <div className="lg:col-start-8 lg:col-span-5">
                     <div className="flex justify-between">
                         <h1 className="text-xl font-medium text-gray-900 max-w-xs">{post.data().header}</h1>
-                        <p className="text-xl font-medium text-gray-900">{computedPrice}</p>
+                        <p className="text-xl font-medium text-gray-900">{computedPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</p>
                     </div>
                 </div>
                 <div className="mt-10 lg:col-start-8 lg:col-span-5">
@@ -137,17 +149,12 @@ export default function Example() {
                 <h2 className="sr-only">Images</h2>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 lg:grid-rows-3 lg:gap-8">
-                    {product.images.map((image) => (
                     <img
-                        key={image.id}
+                        key={post.id}
                         src={post.data().image}
-                        alt={image.imageAlt}
-                        className={classNames(
-                        image.primary ? 'lg:col-span-2 lg:row-span-2' : 'hidden lg:block',
-                        'rounded-lg'
-                        )}
+                        alt={post.data().header}
+                        className='lg:col-span-2 lg:row-span-2'
                     />
-                    ))}
                 </div>
                 </div>
 
@@ -160,8 +167,8 @@ export default function Example() {
                 Add to cart
                 </button>
                 <button
-                className="modal-trigger mt-8 w-full bg-red-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                data-target='modal-buy'
+                className="mt-8 w-full bg-red-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                onClick={() => handleCheckout()}
                 >
                 Buy now
                 </button>
