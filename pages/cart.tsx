@@ -60,8 +60,6 @@ export default function Cart() {
                     list.push(res.data().currency)
                 })
 
-                console.log(list)
-
                 createStripeCheckout(list).then((res) => {
 
                     const sessionId = res.data.id

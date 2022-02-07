@@ -23,23 +23,16 @@ export default function Example() {
 
     let [userLink, setUserLink] = useState()
 
-    async function getData(UID) {
+    async function getData() {
 
-        const userRef = db.collection('Users').doc(UID)
-        const doc = await userRef.get()
         const postDoc = await db.collection('Posts').doc(id).get()
 
-        if (doc.data()) {
-            const displayName = doc.data().displayName
-            console.log(postDoc.data())
-            return (
-            <Link href={`/users/${postDoc.data().user}`}>
-                <a className='text-blue-500'>
-                    {postDoc.data().userDisplayName}
-                </a>
-            </Link>)
-        }
-        return `User ID ${UID} could not be found`
+        return (
+        <Link href={`/users/${postDoc.data().user}`}>
+            <a className='text-blue-500'>
+                {postDoc.data().userDisplayName}
+            </a>
+        </Link>)
     }
 
     function handleCheckout() {
@@ -63,10 +56,8 @@ export default function Example() {
                     }],
                     userId: authUser.uid,
                 },
-                JSON.parse(window.localStorage.getItem(authUser.email)).currency,
+                authUser ? JSON.parse(window.localStorage.getItem(authUser.email)).currency : "USD",
             ]
-
-            console.log(postData)
 
             let createStripeCheckout = functions.httpsCallable('createStripeCheckout')
 
@@ -86,26 +77,19 @@ export default function Example() {
     }
 
     useEffect(() => {
-        if (authUser) {
 
             db.collection('Posts').doc(id).get().then(res => {
 
                 setPost(res)
             })
-        }
-        if (authUser) {
+        getData().then((res:any) => {
 
-            getData(authUser.uid).then((res:any) => {
-
-                setUserLink(res)
-            })
-        }
+            setUserLink(res)
+        })
     }, [authUser])
     useEffect(() => {
         if (authUser) {
             if (post) {
-                console.log(post.data().createdAt)
-                console.log(new Date())
 
                 returnRates(authUser).then((res:any) => {
 
@@ -114,6 +98,12 @@ export default function Example() {
 
                     setPrice(`${symbol} ${calcPrice}`)
                 })
+            }
+        } else {
+
+            if (post) {
+
+                setPrice(`$${post.data().price}`)
             }
         }
 
@@ -164,13 +154,13 @@ export default function Example() {
                 onClick={() => addToCart(post.id)}
                 className="mt-8 w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
-                Add to cart
+                {authUser ? 'Add to cart' : 'Login to add to cart'}
                 </button>
                 <button
                 className="mt-8 w-full bg-red-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 onClick={() => handleCheckout()}
                 >
-                Buy now
+                {authUser ? 'Buy now' : 'Login to buy items'}
                 </button>
 
                 {/* Product details */}

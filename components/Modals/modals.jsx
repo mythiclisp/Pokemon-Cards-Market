@@ -22,8 +22,6 @@ const Modals = () => {
     }
 
 
-    console.log(user ? true : false)
-
     return (
         <React.Fragment>
             <>

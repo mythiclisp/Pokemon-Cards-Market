@@ -1,9 +1,7 @@
-import Image from 'next/image'
-import React, { useEffect } from 'react'
-import { auth, db, functions } from '../Scripts/firebaseconfig'
+import React from 'react'
+import { auth } from '../Scripts/firebaseconfig'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { deletePosts, addTemplatePosts } from '../Scripts/firebasedb'
-import { createCheckout } from '../Scripts/firebasefunctions'
 import Posts from '../components/Posts.jsx'
 import { reloadOrders } from '../Scripts/firebaseauth'
 
@@ -80,9 +78,8 @@ export default function Home() {
       <h3>Posts</h3>
       {user ?
       <Posts limit={10} sort='createdAt'/>:
-      <h3>
-        Login in to see posts
-      </h3>
+
+      <Posts limit={10} sort='createdAt'/>
       }
     </React.Fragment>
   )

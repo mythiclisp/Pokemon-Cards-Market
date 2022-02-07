@@ -324,9 +324,3 @@ export function reloadOrders() {
         })
     })
 }
-
-let string = 'E5Nz9vvR4EZxXFrW8RMN,hello'
-
-let array = string.includes(",") ? string.split(",") : [string]
-
-array.forEach(post => console.log(post))

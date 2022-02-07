@@ -20,7 +20,6 @@ export function createCheckoutWithData(data) {
     createStripeCheckout(data).then((res:any) => {
 
         const sessionId = res.data.id
-        console.log(res.data)
         stripe.redirectToCheckout({ sessionId: sessionId })
     }).catch(err => {
         console.log(err)
