@@ -21,9 +21,11 @@ const Modals = () => {
         setLocalStorage(e)
     }
 
+
+    console.log(user ? true : false)
+
     return (
         <React.Fragment>
-            {user ?
             <>
                 {/* //Account Modal */}
                 <div id="modal-account" className="modal rounded-lg">

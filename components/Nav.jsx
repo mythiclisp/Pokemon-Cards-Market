@@ -11,7 +11,11 @@ function classNames(...classes) {
 }
 
 export default function Nav() {
+    function openModal(modalName) {
 
+        let instance = M ? M.Modal.getInstance(document.getElementById(modalName)) : null
+        instance.open()
+    }
 
     let [user] = useAuthState(auth)
 
@@ -72,8 +76,8 @@ export default function Nav() {
                                     {({ active }) => (
                                         <a
                                         href="#"
-                                        className={'text-gray-700 block px-4 py-2 text-sm modal-trigger'}
-                                        data-target='modal-account'
+                                        className={'text-gray-700 block px-4 py-2 text-sm'}
+                                        onClick={() => openModal('modal-account')}
                                         >
                                         Account settings
                                         </a>
@@ -117,14 +121,23 @@ export default function Nav() {
                                 </Menu.Items>
                             </Transition>
                         </Menu>
-                        <div className="modal-trigger bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium" data-target='modal-createpost'>Create Post</div>
+                        <div
+                        className="cursor-pointer bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium"
+                        onClick={() => openModal('modal-account')}
+                        >Create Post</div>
                         <svg onClick={() => auth.signOut()} xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                         </svg>
                         </> :
                         <>
-                        <div className='modal-trigger bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium' data-target='modal-account'>Login</div>
-                        <div className='modal-trigger bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium' data-target='modal-signup'>Sign up</div>
+                        <div
+                        className='cursor-pointer bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium'
+                        onClick={() => openModal('modal-login')}
+                        >Login</div>
+                        <div
+                        className='cursor-pointer bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium'
+                        onClick={() => openModal('modal-account')}
+                        >Sign up</div>
                         </>}
                     </div>
                 </div>

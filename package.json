@@ -8,7 +8,7 @@
     "export": "next export",
     "lint": "next lint",
     "scss": "node-sass --watch scss -o css",
-    "publish": "npm run build && npm run export && firebase deploy",
+    "publish": "npm run build && npm run export && firebase deploy --only hosting",
     "deploy-functions": "firebase deploy --only functions",
     "deploy-webhook": "firebase deploy --only functions:stripeWebhook",
     "deploy-checkout": "firebase deploy --only functions:createStripeCheckout",

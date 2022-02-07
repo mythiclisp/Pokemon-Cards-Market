@@ -9,6 +9,13 @@ import { reloadOrders } from '../Scripts/firebaseauth'
 
 export default function Home() {
 
+
+  function openModal(modalName) {
+
+    let instance = M ? M.Modal.getInstance(document.getElementById(modalName)) : null
+    instance.open()
+  }
+
   const [user] = useAuthState(auth)
 
   return (
@@ -21,13 +28,18 @@ export default function Home() {
           <button className='text-center text-slate-50 rounded px-10 py-5 w-auto bg-indigo-500' onClick={deletePosts}>
             Delete all posts
           </button>
-          <button className='text-center text-slate-50 rounded px-10 py-5 w-auto bg-indigo-500' onClick={() => addTemplatePosts(user)}>
+          <button
+          className='text-center text-slate-50 rounded px-10 py-5 w-auto bg-indigo-500'
+          onClick={() => addTemplatePosts(user)}
+          >
             Add template posts
           </button>
-          <button className='text-center text-slate-50 rounded px-10 py-5 w-auto bg-indigo-500' onClick={() => reloadOrders()}>
+          <button
+          className='text-center text-slate-50 rounded px-10 py-5 w-auto bg-indigo-500'
+          onClick={() => reloadOrders()}
+          >
             Reload Orders
           </button>
-          <button className='modal-trigger' data-target='modal-test'>Click for modal</button>
         </div>
         <div className='border-break'></div>
       </React.Fragment> :
@@ -35,20 +47,29 @@ export default function Home() {
       }
       <div className="container center-align prompts-container">
         {user ?
-        <button className='text-center text-slate-50 rounded px-10 py-5 w-auto bg-emerald-500 modal-trigger' data-target='modal-createpost'>
+        <button
+        className='text-center text-slate-50 rounded px-10 py-5 w-auto bg-emerald-500'
+        onClick={() => openModal('modal-createpost')}
+        >
           Create a post
         </button> :
         <React.Fragment>
           <div className="row">
             <div className="col s1">
-              <button className='text-center text-slate-50 rounded px-10 py-5 w-auto bg-indigo-500 modal-trigger' data-target='modal-login'>
+              <button
+              className='text-center text-slate-50 rounded px-10 py-5 w-auto bg-indigo-500'
+              onClick={() => openModal('modal-login')}
+              >
                 Login
               </button>
             </div>
           </div>
           <div className="row">
             <div className="col s1">
-              <button className='text-center text-slate-50 rounded px-10 py-5 w-auto bg-indigo-500 modal-trigger' data-target='modal-signup'>
+              <button
+              className='text-center text-slate-50 rounded px-10 py-5 w-auto bg-indigo-500'
+              onClick={() => openModal('modal-signup')}
+              >
                 Signup
               </button>
             </div>
