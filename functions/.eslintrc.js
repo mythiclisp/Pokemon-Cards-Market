@@ -31,5 +31,9 @@ module.exports = {
     "@typescript-eslint/no-var-requires": 0,
     "@typescript-eslint/no-unused-vars": 0,
     "@typescript-eslint/no-explicit-any": 0,
+    "comma-dangle": 0,
+    "semi": 0,
+    "indent": 0,
+    "max-len": 0,
   },
 };

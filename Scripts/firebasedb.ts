@@ -201,17 +201,30 @@ export function getOrders(uid) {
 
                 db.collection("Orders").doc(order).get().then(res => {
 
-                    let postIdsList = res.data().event.data.object.metadata.posts.split(',')
-                    postsList[1][0].push(res.data().shippingStatus)
+                    let postIdsList = res.data().posts
+                     postsList[1][0].push(res.data().status)
 
                     for (let i=0;i<postIdsList.length;i++) {
 
                         let postId = postIdsList[i]
 
-                        db.collection("Posts").doc(postId).get().then(res => {
+                        db.collection("Posts").doc(postId ? postId : 'akJyoW0U9TwAIrIAJLza').get().then(res => {
 
-                            let data = res.data()
-                            data.id = res.id
+                            console.log(postId)
+
+                            let data = res.data() ? res.data() :
+                            {
+                                bought: false,
+                                condition: "Deleted",
+                                description: "Deleted",
+                                header: "Deleted",
+                                id: "oBSGvtOWAk19hpfwPLX0",
+                                image: "https://firebasestorage.googleapis.com/v0/b/pokemon-cards-market.appspot.com/o/Untitled.png?alt=media&token=96124d0a-83c0-4923-b714-6900ab1faebd",
+                                price: 0,
+                                user: "gC3BRlhPeCYTLP04C1MSoepVENj2",
+                                userDisplayName: "Pristine 10",
+                            }
+                            data.id = postId
                             postsList[0][x].push(data)
 
                             if (i>=postIdsList.length-1 && x>=ordersList.length-1) {
@@ -228,6 +241,7 @@ export function getOrders(uid) {
                                     postsList[1][1].push(orderPrice)
                                 }
 
+                                postsList[0] = postsList[0].reverse()
                                 resolve(postsList)
                             }
                         })
@@ -255,6 +269,17 @@ db.collection("Posts").get().then(res => {
 
         let data = post.data()
         Object.assign(data, {bought: false})
+
+        db.collection("Posts").doc(post.id).set(data)
+    })
+})
+
+db.collection("Posts").get().then(res => {
+
+    res.forEach(post => {
+
+        const data = post.data()
+        Object.assign(data, {views: 0})
 
         db.collection("Posts").doc(post.id).set(data)
     })

@@ -255,7 +255,7 @@ const Modals = () => {
                                 <label htmlFor="post-price">Price</label>
                             </div>
                             <div className="input-field">
-                                <input type="file" id='post-image' accept='image/x-png,image/gif,image/jpeg'/>
+                                <input type="file" className='post-image' accept='image/x-png,image/gif,image/jpeg'/>
                             </div>
                             <div className="input-field">
                                 <input type="text" id='condition'/>
@@ -265,7 +265,7 @@ const Modals = () => {
                         </form>
                     </div>
                 </div>
-            </> :
+            </>
             <>
                 {/* //Sign Up Modal */}
                 <div id="modal-signup" className='modal rounded-lg'>
@@ -285,7 +285,7 @@ const Modals = () => {
                                 <label htmlFor="signup-password">Choose password</label>
                             </div>
                             <div className="input-field">
-                                <input type="file" id='post-image' accept='image/x-png,image/gif,image/jpeg'/>
+                                <input type="file" className='post-image' accept='image/x-png,image/gif,image/jpeg'/>
                             </div>
                             <div className="input-field">
                                 <select className="currency" name="currency">
@@ -493,8 +493,6 @@ const Modals = () => {
                     </div>
                 </div>
             </>
-            }
-
         </React.Fragment>
     )
 }

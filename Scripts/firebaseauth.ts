@@ -248,6 +248,8 @@ export const changeCurrency = async (e: any) => {
 
 export const addToCart = (postId) => {
 
+    console.log(postId)
+
     postId = postId.replace('undefined','')
 
     db.collection('Users').doc(auth.currentUser.uid).get().then(doc => {
@@ -311,14 +313,14 @@ export function reloadOrders() {
 
         response.forEach(order => {
 
-            db.collection("Users").doc(order.data().uid).get().then(resolve2 => {
+
+            db.collection("Users").doc(order.data().userId).get().then(resolve2 => {
 
                 let data = resolve2.data()
 
                 if (data.orders.includes(order.id)===false) {
 
                     data.orders.push(order.id)
-                    db.collection("Users").doc(order.data().uid).set(data)
                 }
             })
         })

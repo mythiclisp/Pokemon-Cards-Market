@@ -6,7 +6,7 @@ import { auth } from "../Scripts/firebaseconfig"
 
 export default function Home() {
 
-    let [user] = useAuthState(auth      )
+    let [user] = useAuthState(auth)
 
     return (
         <React.Fragment>

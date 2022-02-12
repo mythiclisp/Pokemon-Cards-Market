@@ -13,9 +13,10 @@ export default function Example() {
     const { query } = useRouter();
     const { id } = query;
 
-
     //Make state variable for posts
     let [post, setPost]:any = useState()
+
+    console.log(post ? post.id : false)
 
     let [authUser] = useAuthState(auth)
 
@@ -28,18 +29,19 @@ export default function Example() {
         const postDoc = await db.collection('Posts').doc(id).get()
 
         return (
+        postDoc ?
         <Link href={`/users/${postDoc.data().user}`}>
             <a className='text-blue-500'>
                 {postDoc.data().userDisplayName}
             </a>
-        </Link>)
+        </Link> : null)
     }
 
     function handleCheckout() {
 
         if (post) {
 
-            let price:number = Math.round(Math.round(post.data().price * 100)/100 * 10000) /100
+            let price:number = Math.round(Math.round(post.price * 100)/100 * 10000) /100
 
             let postData = [
                 {
@@ -50,7 +52,7 @@ export default function Example() {
                             currency: "usd",
                             unit_amount: (100) * (price / 100), // 10000 = 100 USD
                             product_data: {
-                                name: post.data().header,
+                                name: post.header,
                             },
                         },
                     }],
@@ -61,6 +63,7 @@ export default function Example() {
 
             let createStripeCheckout = functions.httpsCallable('createStripeCheckout')
 
+            console.log(postData)
             createStripeCheckout(postData).then((res) => {
 
                 const sessionId = res.data.id
@@ -78,10 +81,16 @@ export default function Example() {
 
     useEffect(() => {
 
-            db.collection('Posts').doc(id).get().then(res => {
+        db.collection('Posts').doc(id).get().then(res => {
 
-                setPost(res)
-            })
+            if (res.data) {
+
+                const data = res.data()
+                Object.assign(data, {id: res.id})
+                console.log(data)
+                setPost(data)
+            }
+        })
         getData().then((res:any) => {
 
             setUserLink(res)
@@ -93,7 +102,7 @@ export default function Example() {
 
                 returnRates(authUser).then((res:any) => {
 
-                    let calcPrice = Math.round(res.rate * parseFloat((Math.round(post.data().price * 100)/100).toString()) * 100) /100
+                    let calcPrice = Math.round(res.rate * parseFloat((Math.round(post.price * 100)/100).toString()) * 100) /100
                     const symbol = res.symbol
 
                     setPrice(`${symbol} ${calcPrice}`)
@@ -103,7 +112,7 @@ export default function Example() {
 
             if (post) {
 
-                setPrice(`$${post.data().price}`)
+                setPrice(`$${post.price}`)
             }
         }
 
@@ -119,14 +128,14 @@ export default function Example() {
             <div className="lg:grid lg:grid-cols-12 lg:auto-rows-min lg:gap-x-8">
                 <div className="lg:col-start-8 lg:col-span-5">
                     <div className="flex justify-between">
-                        <h1 className="text-xl font-medium text-gray-900 max-w-xs">{post.data().header}</h1>
+                        <h1 className="text-xl font-medium text-gray-900 max-w-xs">{post.header}</h1>
                         <p className="text-xl font-medium text-gray-900">{computedPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</p>
                     </div>
                 </div>
                 <div className="mt-10 lg:col-start-8 lg:col-span-5">
                     <div className="flex justify-between">
                         <h1 className="text-xl font-medium text-gray-900 max-w-xs">
-                            {`Created on ${post.data().date} by `}
+                            {`Created on ${post.date} by `}
                             <div className='text-blue-300'>
                                 {userLink}
                             </div>
@@ -141,8 +150,8 @@ export default function Example() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 lg:grid-rows-3 lg:gap-8">
                     <img
                         key={post.id}
-                        src={post.data().image}
-                        alt={post.data().header}
+                        src={post.image}
+                        alt={post.header}
                         className='lg:col-span-2 lg:row-span-2'
                     />
                 </div>
@@ -169,7 +178,7 @@ export default function Example() {
 
                     <div
                     className="mt-4 prose prose-sm text-gray-500"
-                    dangerouslySetInnerHTML={{ __html: post.data().description }}
+                    dangerouslySetInnerHTML={{ __html: post.description }}
                     />
                 </div>
 
@@ -178,7 +187,7 @@ export default function Example() {
 
                     <div className="mt-4 prose prose-sm text-gray-500">
                     <ul role="list">
-                        {post.data().condition}
+                        {post.condition}
                     </ul>
                     </div>
                 </div>

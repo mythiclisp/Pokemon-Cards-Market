@@ -23,8 +23,21 @@ export default function Posts(props) {
 
     //Make state variable for posts
     let [posts] = useCollectionData((props.uid ? userQuery : query), {idField: 'id'})
-    let [cartPosts, setCartPosts] = useState()
-    let [orderPosts, setOrderPosts] = useState()
+    let [cartPosts, setCartPosts]:any = useState()
+    let [orderPosts, setOrderPosts] = useState(null)
+    let [emptyCart, setEmptyCart] = useState(false)
+
+    useEffect(() => {
+
+        if (!(cartPosts && cartPosts.map((post, index) => <Post key={post.id} cart={true} index={index} postId={post.id} data={post}/>)) && props.cart ) {
+
+            setEmptyCart(emptyCart = true)
+            console.log(props.cart)
+        } else {
+
+            setEmptyCart(emptyCart = false)
+        }
+    },[cartPosts])
 
     let [authUser] = useAuthState(auth)
 
@@ -39,7 +52,7 @@ export default function Posts(props) {
     useEffect(() => {
         if (props.cart) {
 
-            getCart(authUser).then(res => {
+            getCart(authUser).then((res:any) => {
 
                 setCartPosts(res)
             })
@@ -48,12 +61,12 @@ export default function Posts(props) {
 
             getOrders(authUser.uid).then(res => {
 
-
                 let ordersList = []
 
                 for (let i=0;i<res[0].length;i++) {
 
-                    returnRates(auth.currentUser).then((response) => {
+                    returnRates(auth.currentUser).then((response:any) => {
+                        console.log(res)
 
                         let calcPrice = Math.round(response.rate * parseFloat((Math.round(res[1][1][i] * 100)/100 * 100).toString()) /100)
                         const symbol = response.symbol
@@ -72,12 +85,21 @@ export default function Posts(props) {
                         setOrderPosts(<div className='mt-6 grid grid-cols-1'>{ordersList}</div>)
                     })
                 }
+
+                if (!res) {
+
+                    console.log("No res")
+                }
             })
         }
     }, [authUser])
 
     return (
         <React.Fragment>
+            {emptyCart ?
+            <h1 className='my-10'>
+                Empty cart
+            </h1>:
             <div className="bg-white">
             <div className="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
                 <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
@@ -87,7 +109,7 @@ export default function Posts(props) {
                 </div>
                 {props.orders ? orderPosts : null}
             </div>
-            </div>
+            </div>}
         </React.Fragment>
     )
 }

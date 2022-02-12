@@ -1,7 +1,5 @@
-import Link from "next/link";
 import React, { useRef } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import Loader from "../components/loader";
 import Posts from "../components/Posts";
 import { auth, db, functions } from "../Scripts/firebaseconfig";
 import { getCart } from "../Scripts/firebasedb";
@@ -25,8 +23,6 @@ export default function Cart() {
 
                 //Cloud function that creates stripe checkout
                 const createStripeCheckout = functions.httpsCallable('createStripeCheckout')
-
-                //For all data passes into cloud function
 
                 //For line items
                 let postsList:object[] = []
@@ -60,9 +56,12 @@ export default function Cart() {
                     list.push(res.data().currency)
                 })
 
+                console.log(list)
+
                 createStripeCheckout(list).then((res) => {
 
                     const sessionId = res.data.id
+                    console.log(sessionId)
 
                     //Redirect to stripe chechout
                     stripe.redirectToCheckout({sessionId: sessionId})

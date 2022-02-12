@@ -2,7 +2,7 @@ import React from 'react'
 import { auth } from '../Scripts/firebaseconfig'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { deletePosts, addTemplatePosts } from '../Scripts/firebasedb'
-import Posts from '../components/Posts.jsx'
+import Posts from '../components/Posts'
 import { reloadOrders } from '../Scripts/firebaseauth'
 
 export default function Home() {
@@ -77,7 +77,7 @@ export default function Home() {
       </div>
       <h3>Posts</h3>
       {user ?
-      <Posts limit={10} sort='createdAt'/>:
+      <Posts limit={10} sort='createdAt'/> :
 
       <Posts limit={10} sort='createdAt'/>
       }

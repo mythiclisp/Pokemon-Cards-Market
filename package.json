@@ -12,7 +12,8 @@
     "deploy-functions": "firebase deploy --only functions",
     "deploy-webhook": "firebase deploy --only functions:stripeWebhook",
     "deploy-checkout": "firebase deploy --only functions:createStripeCheckout",
-    "install-deps": "npm i express@latest cors@latest next@latest bad-words@latest firebase@latest firebase-admin@latest firebase-tools@latest react@latest react-dom@latest react-firebase-hooks@latest tailwindcss@latest postcss@latest stripe@latest scss@latest three@latest autoprefixer@latest"
+    "install-deps": "npm i express@latest cors@latest next@latest bad-words@latest firebase@latest firebase-admin@latest firebase-tools@latest react@latest react-dom@latest react-firebase-hooks@latest tailwindcss@latest postcss@latest stripe@latest scss@latest three@latest autoprefixer@latest",
+    "emulators": "firebase emulators:start"
   },
   "dependencies": {
     "@headlessui/react": "^1.4.3",

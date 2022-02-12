@@ -1,16 +1,208 @@
 import * as functions from "firebase-functions";
 
+let event = {
+  "id": "evt_3KQm2mCM9K7H85bb097RGvzr",
+  "object": "event",
+  "api_version": "2020-08-27",
+  "created": 1644297318,
+  "data": {
+    "object": {
+      "id": "pi_3KQm2mCM9K7H85bb0Aimzrn5",
+      "object": "payment_intent",
+      "amount": 83454377,
+      "amount_capturable": 0,
+      "amount_received": 83454377,
+      "application": null,
+      "application_fee_amount": null,
+      "automatic_payment_methods": null,
+      "canceled_at": null,
+      "cancellation_reason": null,
+      "capture_method": "automatic",
+      "charges": {
+        "object": "list",
+        "data": [
+          {
+            "id": "ch_3KQm2mCM9K7H85bb0FQgQ82T",
+            "object": "charge",
+            "amount": 83454377,
+            "amount_captured": 83454377,
+            "amount_refunded": 0,
+            "application": null,
+            "application_fee": null,
+            "application_fee_amount": null,
+            "balance_transaction": "txn_3KQm2mCM9K7H85bb04tme2mM",
+            "billing_details": {
+              "address": {
+                "city": "Vancouver",
+                "country": "CA",
+                "line1": "3305 13Th Ave W",
+                "line2": null,
+                "postal_code": "V6R 2R8",
+                "state": "BC"
+              },
+              "email": "theonlybaconsandwich@gmail.com",
+              "name": "Nate Jarvis-Loewen",
+              "phone": null
+            },
+            "calculated_statement_descriptor": "WWW.POKEMONCARDSMARKET",
+            "captured": true,
+            "created": 1644297318,
+            "currency": "usd",
+            "customer": "cus_L7027LFA4foffC",
+            "description": null,
+            "destination": null,
+            "dispute": null,
+            "disputed": false,
+            "failure_code": null,
+            "failure_message": null,
+            "fraud_details": {
+            },
+            "invoice": null,
+            "livemode": false,
+            "metadata": {
+              "userId": "vkKROlmstYXA7qg3DoLlSWsnxGA3",
+              "posts": "RpNvLMwEcJvMSpHzvNms"
+            },
+            "on_behalf_of": null,
+            "order": null,
+            "outcome": {
+              "network_status": "approved_by_network",
+              "reason": null,
+              "risk_level": "normal",
+              "risk_score": 7,
+              "seller_message": "Payment complete.",
+              "type": "authorized"
+            },
+            "paid": true,
+            "payment_intent": "pi_3KQm2mCM9K7H85bb0Aimzrn5",
+            "payment_method": "pm_1KQm2rCM9K7H85bbV1xEmQEG",
+            "payment_method_details": {
+              "card": {
+                "brand": "visa",
+                "checks": {
+                  "address_line1_check": "pass",
+                  "address_postal_code_check": "pass",
+                  "cvc_check": null
+                },
+                "country": "US",
+                "exp_month": 3,
+                "exp_year": 2051,
+                "fingerprint": "uxjgStjFqbQhLZdq",
+                "funding": "credit",
+                "installments": null,
+                "last4": "4242",
+                "network": "visa",
+                "three_d_secure": null,
+                "wallet": null
+              },
+              "type": "card"
+            },
+            "receipt_email": null,
+            "receipt_number": null,
+            "receipt_url": "https://pay.stripe.com/receipts/acct_1K6oGfCM9K7H85bb/ch_3KQm2mCM9K7H85bb0FQgQ82T/rcpt_L702CGjaVLdAHLEKDL3wjTAnn4dF8T1",
+            "refunded": false,
+            "refunds": {
+              "object": "list",
+              "data": [
+              ],
+              "has_more": false,
+              "total_count": 0,
+              "url": "/v1/charges/ch_3KQm2mCM9K7H85bb0FQgQ82T/refunds"
+            },
+            "review": null,
+            "shipping": {
+              "address": {
+                "city": "Vancouver",
+                "country": "CA",
+                "line1": "3305 13Th Ave W",
+                "line2": null,
+                "postal_code": "V6R 2R8",
+                "state": "BC"
+              },
+              "carrier": null,
+              "name": "Nate Jarvis-Loewen",
+              "phone": null,
+              "tracking_number": null
+            },
+            "source": null,
+            "source_transfer": null,
+            "statement_descriptor": null,
+            "statement_descriptor_suffix": null,
+            "status": "succeeded",
+            "transfer_data": null,
+            "transfer_group": null
+          }
+        ],
+        "has_more": false,
+        "total_count": 1,
+        "url": "/v1/charges?payment_intent=pi_3KQm2mCM9K7H85bb0Aimzrn5"
+      },
+      "client_secret": "pi_3KQm2mCM9K7H85bb0Aimzrn5_secret_GWqq1AFS2BuZ87gkcgC0FH7vC",
+      "confirmation_method": "automatic",
+      "created": 1644297312,
+      "currency": "usd",
+      "customer": "cus_L7027LFA4foffC",
+      "description": null,
+      "invoice": null,
+      "last_payment_error": null,
+      "livemode": false,
+      "metadata": {
+        "userId": "vkKROlmstYXA7qg3DoLlSWsnxGA3",
+        "posts": "RpNvLMwEcJvMSpHzvNms"
+      },
+      "next_action": null,
+      "on_behalf_of": null,
+      "payment_method": "pm_1KQm2rCM9K7H85bbV1xEmQEG",
+      "payment_method_options": {
+        "card": {
+          "installments": null,
+          "network": null,
+          "request_three_d_secure": "automatic"
+        }
+      },
+      "payment_method_types": [
+        "card"
+      ],
+      "processing": null,
+      "receipt_email": null,
+      "review": null,
+      "setup_future_usage": null,
+      "shipping": {
+        "address": {
+          "city": "Vancouver",
+          "country": "CA",
+          "line1": "3305 13Th Ave W",
+          "line2": null,
+          "postal_code": "V6R 2R8",
+          "state": "BC"
+        },
+        "carrier": null,
+        "name": "Nate Jarvis-Loewen",
+        "phone": null,
+        "tracking_number": null
+      },
+      "source": null,
+      "statement_descriptor": null,
+      "statement_descriptor_suffix": null,
+      "status": "succeeded",
+      "transfer_data": null,
+      "transfer_group": null
+    }
+  },
+  "livemode": false,
+  "pending_webhooks": 1,
+  "request": {
+    "id": "req_30tjaAVEPJnCTV",
+    "idempotency_key": "75fca2c0-44cd-4f1c-b77c-1140fe7ebc15"
+  },
+  "type": "payment_intent.succeeded"
+}
+
 const admin = require("firebase-admin");
 admin.initializeApp();
 
-const addPost = async (post:any) => {
-  const {id} = await admin.firestore().collection("Orders").add(post);
-  return id;
-};
-
 // Config stripe with secret api key
 const stripe = require("stripe")(functions.config().stripe.secret_key);
-const endPointSecret = "whsec_AFm2MpbUuVS1mgdp8k8dVSsIkaeRUudr";
 
 export const createStripeCheckout =
 functions.https.onCall(async (data:any, context:any) => {
@@ -50,87 +242,51 @@ functions.https.onCall(async (data:any, context:any) => {
 
 export const stripeWebhook =
 functions.https.onRequest(async (request:any, response:any) => {
-  let event = request.body;
-  if (endPointSecret) {
-    const signature = request.headers["stripe-signature"];
-    try {
-      // Test validity of stripe signature
-      event = stripe.webhooks.constructEvent(
-          request.rawBody,
-          signature,
-          endPointSecret
-      );
-    } catch (err) {
-      // If unvalid
-      console.log("⚠️  Webhook signature verification failed.", err);
-      return response.sendStatus(400);
-    }
+  try {
+    event = stripe.webhooks.constructEvent(
+      request.rawBody,
+      request.headers["stripe-signature"],
+      functions.config().stripe.payments_webhook_secret,
+    );
+  } catch (err) {
+    response.sendStatus(200);
   }
-  // Check type of event
+
+  if (event.type === "payment_intent.succeeded") {
+    admin.firestore().collection("Orders").add({
+      shipping: event.data.object.shipping,
+      userId: event.data.object.metadata.userId,
+      posts: event.data.object.metadata.posts.includes(",") ?
+      event.data.object.metadata.posts.split(",") :
+      [event.data.object.metadata.posts],
+      status: "Waiting for seller to ship",
+    }).then((response:any) => {
+      admin.firestore().collection("Users")
+      .doc(event.data.object.metadata.userId).get().then((res:any) => {
+        const data = res.data();
+        data.orders.push(response.id);
+        admin.firestore().collection("Users")
+        .doc(event.data.object.metadata.userId).set(data);
+      });
+    });
+  }
+
   switch (event.type) {
-    case "payment_intent.succeeded":
-
-      response.sendStatus(200);
-      const paymentIntent = event.data.object;
-      console.log(`PaymentIntent for ${paymentIntent.amount} was successful!`);
-      // Then define and call a method to handle the successful payment intent.
-      try {
-        const postIds = event.data.object.metaData.posts;
-        postIds.includes(",") ?
-        postIds.split(",") :
-        [postIds]
-            .forEach((postId: string) => {
-              admin.firestore().collection("Posts")
-                  .doc(postId).get().then((res:any) => {
-                    const data = res.data();
-                    data.bought = true;
-
-                    admin.firestore().collection("Posts")
-                        .doc(postId).set(data);
-                  });
-            });
-        // Try adding order data to firebase
-        addPost({
-          uid: event.data.object.metadata.userId,
-          shipping: event.data.object.shipping,
-          status: event.data.object.status,
-          amount: (event.data.object.amount/100),
-          currency: event.data.object.currency,
-          url: event.data.object.charges.url,
-          event: event,
-          metadata: event.data.object.metaData,
-          shippingStatus:
-          "Waiting for seller to ship to card verification facility",
-        }).then((response:any) => {
-          console.log("Added order to database");
-
-          admin.firestore().collection("Users")
-              .doc(event.data.object.metadata.userId)
-              .get()
-              .then((res:any) => {
-                const data = res.data();
-                data.orders.push(response);
-
-                admin.firestore().collection("Users")
-                    .doc(event.data.object.metadata.userId)
-                    .set(data).then(() => {
-                      console.log("Succesfully updated users order page");
-                    });
-              });
-        });
-      } catch (err) {
-        // If fail, add unformated data to db and log error
-        console.log(event.data.object.metadata.userId);
-        admin.firestore().collection("Orders").doc().set({
-          event: event,
-        });
-        console.log(`Couldn"t add data to firestore + ${err}`);
-      }
-      break;
-    case "payment_method.attached":
-      break;
     default:
       // Unexpected event type
       console.log(`Unhandled event type ${event.type}.`);
   }
+  return;
 });
+
+export const onNewOrder =
+functions.firestore.document("Orders/{docId}")
+.onCreate((snap:any, context:any) => {
+  admin.firestore().collection("Users").doc(snap.data().userId)
+  .get().then((res:any) => {
+    const data = res.data();
+    data.orders.push(context.params.docId);
+    admin.firestore().collection("Users").doc(snap.data().userId).set(data)
+  });
+  return;
+})
