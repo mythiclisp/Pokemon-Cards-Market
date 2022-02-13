@@ -1,46 +1,54 @@
 import { auth, db } from '../Scripts/firebaseconfig'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
-import React, { useMemo, useState } from 'react'
+import React, { useState  } from 'react'
 import Post from './Post'
 import { useEffect } from 'react'
-import PostStyles from '../css/Posts.module.css'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { getCart, getOrders } from '../Scripts/firebasedb'
 import { returnRates } from '../Scripts/currency'
 
 export default function Posts(props) {
 
-    let sort = props.sort ? props.sort : 'createdAt'
+    let sort = props.sort ? props.sort : 'views'
 
     //Refrence to firestore collection
     let postsRef = db.collection('Posts')
 
     //Query results by date and add limit
-    const query =  postsRef.orderBy(sort, "desc").limit(props.limit)
+    let query =  postsRef.where("bought", "==", false).orderBy(sort, props.asc ? 'asc' : 'desc').limit(props.limit)
 
     //Query posts by UID
     let userQuery = props.uid ? postsRef.where('user', '==', props.uid) : null
+
+    if (props.trending) {
+        
+        const viewsList = 
+        db.collection("Posts").where("createdAt", ">", new Date().getTime()-1000000000).orderBy("views", "asc").get().then(res => {
+
+            res.forEach(post => {
+
+                console.log(post.data())
+            })
+        })
+    }
 
     //Make state variable for posts
     let [posts] = useCollectionData((props.uid ? userQuery : query), {idField: 'id'})
     let [cartPosts, setCartPosts]:any = useState()
     let [orderPosts, setOrderPosts] = useState(null)
     let [emptyCart, setEmptyCart] = useState(false)
+    let [authUser] = useAuthState(auth)
 
     useEffect(() => {
 
         if (!(cartPosts && cartPosts.map((post, index) => <Post key={post.id} cart={true} index={index} postId={post.id} data={post}/>)) && props.cart ) {
 
             setEmptyCart(emptyCart = true)
-            console.log(props.cart)
         } else {
 
             setEmptyCart(emptyCart = false)
         }
     },[cartPosts])
-
-    let [authUser] = useAuthState(auth)
-
 
     useEffect(() => {
 
@@ -66,7 +74,6 @@ export default function Posts(props) {
                 for (let i=0;i<res[0].length;i++) {
 
                     returnRates(auth.currentUser).then((response:any) => {
-                        console.log(res)
 
                         let calcPrice = Math.round(response.rate * parseFloat((Math.round(res[1][1][i] * 100)/100 * 100).toString()) /100)
                         const symbol = response.symbol
@@ -85,11 +92,6 @@ export default function Posts(props) {
                         setOrderPosts(<div className='mt-6 grid grid-cols-1'>{ordersList}</div>)
                     })
                 }
-
-                if (!res) {
-
-                    console.log("No res")
-                }
             })
         }
     }, [authUser])
@@ -105,7 +107,12 @@ export default function Posts(props) {
                 <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
                     {props.cart ? cartPosts && cartPosts.map((post, index) => <Post key={post.id} cart={true} index={index} postId={post.id} data={post}/>)
                     : null}
-                    {!props.cart && !props.orders ? posts && posts.map(post => <Post key={post.id} postId={post.id} data={post}/>) : null}
+                    {!props.cart && !props.orders ? 
+                    posts && 
+                    (!props.orderBy ? 
+                    [...posts].reverse().map(post => <Post key={post.id} postId={post.id} data={post}/>)
+                    : posts.map(post => <Post key={post.id} postId={post.id} data={post}/>))
+                     : null}
                 </div>
                 {props.orders ? orderPosts : null}
             </div>

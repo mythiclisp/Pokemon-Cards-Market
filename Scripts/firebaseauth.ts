@@ -248,8 +248,6 @@ export const changeCurrency = async (e: any) => {
 
 export const addToCart = (postId) => {
 
-    console.log(postId)
-
     postId = postId.replace('undefined','')
 
     db.collection('Users').doc(auth.currentUser.uid).get().then(doc => {

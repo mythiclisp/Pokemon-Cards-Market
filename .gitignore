@@ -12,6 +12,9 @@
 /.next/
 /out/
 
+#scss
+/scss/
+
 # misc
 .DS_Store
 *.pem

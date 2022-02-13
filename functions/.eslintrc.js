@@ -35,5 +35,6 @@ module.exports = {
     "semi": 0,
     "indent": 0,
     "max-len": 0,
+    "linebreak-style": 0,
   },
 };

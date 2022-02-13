@@ -13,28 +13,33 @@ export default function Example() {
     const { query } = useRouter();
     const { id } = query;
 
+    const [postId] = useState(id)
+
     //Make state variable for posts
     let [post, setPost]:any = useState()
-
-    console.log(post ? post.id : false)
 
     let [authUser] = useAuthState(auth)
 
     let [computedPrice, setPrice] = useState('0')
 
+    let [viewed, setViewed] = useState(false)
+
     let [userLink, setUserLink] = useState()
 
     async function getData() {
 
-        const postDoc = await db.collection('Posts').doc(id).get()
+        if (id) {
 
-        return (
-        postDoc ?
-        <Link href={`/users/${postDoc.data().user}`}>
-            <a className='text-blue-500'>
-                {postDoc.data().userDisplayName}
-            </a>
-        </Link> : null)
+            const postDoc = await db.collection('Posts').doc(id).get()
+
+            return (
+            postDoc ?
+            <Link href={`/users/${postDoc.data().user}`}>
+                <a className='text-blue-500'>
+                    {postDoc.data().userDisplayName}
+                </a>
+            </Link> : null)
+        }
     }
 
     function handleCheckout() {
@@ -63,7 +68,6 @@ export default function Example() {
 
             let createStripeCheckout = functions.httpsCallable('createStripeCheckout')
 
-            console.log(postData)
             createStripeCheckout(postData).then((res) => {
 
                 const sessionId = res.data.id
@@ -80,14 +84,49 @@ export default function Example() {
     }
 
     useEffect(() => {
+        
+        if (id && !viewed) {
+
+            setViewed(viewed = true)
+
+            if (!localStorage.getItem(id.toString())) {
+
+                db.collection("Posts").doc(id).get().then(res => {
+
+                    const data = res.data()
+                    data.views += 1
+                    db.collection("Posts").doc(id).set(data)
+    
+                    localStorage.setItem(id.toString(), Math.round(new Date().getTime() / 1000).toString())
+                    console.log(data)
+                })
+            }
+
+            if (parseInt(localStorage.getItem(id.toString()))+30 < Math.round(new Date().getTime() / 1000)) {
+
+                db.collection("Posts").doc(id).get().then(res => {
+
+                    const data = res.data()
+                    data.views += 1
+                    db.collection("Posts").doc(id).set(data)
+    
+                    localStorage.setItem(id.toString(), Math.round(new Date().getTime() / 1000).toString())
+                })
+            } else {
+
+                console.log('')
+            }
+        }
+    })
+
+    useEffect(() => {
 
         db.collection('Posts').doc(id).get().then(res => {
 
-            if (res.data) {
+            if (res.data && id) {
 
                 const data = res.data()
                 Object.assign(data, {id: res.id})
-                console.log(data)
                 setPost(data)
             }
         })
@@ -96,6 +135,7 @@ export default function Example() {
             setUserLink(res)
         })
     }, [authUser])
+
     useEffect(() => {
         if (authUser) {
             if (post) {

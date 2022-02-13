@@ -210,20 +210,7 @@ export function getOrders(uid) {
 
                         db.collection("Posts").doc(postId ? postId : 'akJyoW0U9TwAIrIAJLza').get().then(res => {
 
-                            console.log(postId)
-
-                            let data = res.data() ? res.data() :
-                            {
-                                bought: false,
-                                condition: "Deleted",
-                                description: "Deleted",
-                                header: "Deleted",
-                                id: "oBSGvtOWAk19hpfwPLX0",
-                                image: "https://firebasestorage.googleapis.com/v0/b/pokemon-cards-market.appspot.com/o/Untitled.png?alt=media&token=96124d0a-83c0-4923-b714-6900ab1faebd",
-                                price: 0,
-                                user: "gC3BRlhPeCYTLP04C1MSoepVENj2",
-                                userDisplayName: "Pristine 10",
-                            }
+                            let data = res.data()
                             data.id = postId
                             postsList[0][x].push(data)
 
@@ -263,24 +250,13 @@ export function deleteCartItem(index, user) {
     })
 }
 
+
 db.collection("Posts").get().then(res => {
 
     res.forEach(post => {
 
         let data = post.data()
-        Object.assign(data, {bought: false})
-
-        db.collection("Posts").doc(post.id).set(data)
-    })
-})
-
-db.collection("Posts").get().then(res => {
-
-    res.forEach(post => {
-
-        const data = post.data()
-        Object.assign(data, {views: 0})
-
+        data.bought = false
         db.collection("Posts").doc(post.id).set(data)
     })
 })

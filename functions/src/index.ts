@@ -253,6 +253,14 @@ functions.https.onRequest(async (request:any, response:any) => {
   }
 
   if (event.type === "payment_intent.succeeded") {
+    event.data.object.metadata.posts.split(",").forEach((post) => {
+      admin.firestore().collection("Posts").doc(post).get()
+      .then((res:any) => {
+        const data = res.data()
+        data.bought = true
+        admin.firestore().collection("Posts").doc(post).set(data)
+      })
+    })
     admin.firestore().collection("Orders").add({
       shipping: event.data.object.shipping,
       userId: event.data.object.metadata.userId,

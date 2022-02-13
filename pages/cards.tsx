@@ -16,7 +16,7 @@ const Home = () => {
             {user ?
             <React.Fragment>
                 <h3>Popular</h3>
-                <Posts limit={5}/>
+                <Posts sort={'views'} orderBy='asc' limit={100}/>
                 <h3>Trending</h3>
                 <Posts limit={5}/>
                 <h3>Recomended</h3>

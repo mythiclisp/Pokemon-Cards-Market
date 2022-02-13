@@ -48,7 +48,6 @@ export default function Post(props) {
 
       deleteCartItem(index,user)
       removePost(deleted = true)
-      console.log(deleted)
     }
 
     //Collects data for state variables
@@ -121,7 +120,7 @@ export default function Post(props) {
               <div style={{gridTemplateColumns: '1.45fr .55fr'}} className="mt-4 grid grid-cols-2">
                 <div>
                   <h3 className="text-base m-0">
-                    <Link href={`../post/${id}`}>
+                    <Link href={`../post/${id}`} passHref>
                       <span className="text-gray-700">
                         <span aria-hidden={true} className="z-0 absolute bottom-0 left-0 right-0 top-20"></span>
                         {header}
