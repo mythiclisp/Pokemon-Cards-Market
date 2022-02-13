@@ -172,7 +172,7 @@ export const createPost = async (e: any) => {
                 user: auth.currentUser.uid,
                 userDisplayName: auth.currentUser.displayName,
                 date: getDate(),
-                createdAt: new Date(),
+                createdAt: new Date().getTime(),
                 condition: condition
             }).then((res) => {
 
@@ -274,9 +274,12 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 auth.onAuthStateChanged(user => {
+
     if (user) {
-        db.collection('Users').doc(auth.currentUser.uid).get().then(data => {
-            data = data.data()
+
+        db.collection('Users').doc(auth.currentUser.uid).get().then(res => {
+
+            const data = res.data()
             data.email = auth.currentUser.email
             data.displayName = auth.currentUser.displayName,
             data.currency = JSON.parse(window.localStorage.getItem(auth.currentUser.email)).currency
@@ -297,7 +300,7 @@ export async function addImageToStorage(file) {
     return fileURL
 }
 
-db.collection('Orders').get().then((res:object[]) => {
+db.collection('Orders').get().then((res) => {
 
     res.forEach((order:any) => {
 
@@ -324,3 +327,14 @@ export function reloadOrders() {
         })
     })
 }
+
+db.collection("Posts").get().then(res => {
+
+    res.forEach(post => {
+
+        const data = post.data()
+        data.createdAt = new Date().getTime()
+
+        db.collection("Posts").doc(post.id).set(data)
+    })
+})

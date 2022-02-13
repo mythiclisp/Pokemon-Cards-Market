@@ -21,9 +21,10 @@ export default function Posts(props) {
     let userQuery = props.uid ? postsRef.where('user', '==', props.uid) : null
 
     if (props.trending) {
-        
-        const viewsList = 
-        db.collection("Posts").where("createdAt", ">", new Date().getTime()-1000000000).orderBy("views", "asc").get().then(res => {
+
+        const viewsList =  []
+
+        db.collection("Posts").where("createdAt", "<", new Date().getTime()).get().then(res => {
 
             res.forEach(post => {
 

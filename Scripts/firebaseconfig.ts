@@ -14,9 +14,50 @@ firebase.initializeApp({
   measurementId: "G-KP98M0KWZB"
 })
 
+interface docReturn {
+  
+  data(): any,
+  id: string,
+  exists: boolean,
+}
+
+interface collectionReturn {
+
+  docs: object,
+  exists: boolean,
+  metadata: string,
+  query: string,
+  size: number,
+  forEach(index),
+}
+
+interface firebaseDb {
+  collection(collectionPath: string): {
+
+    doc(docPath: string): {
+
+      get():Promise<docReturn>,
+      set(data),
+      delete(),
+    },
+
+    get():Promise<collectionReturn>
+    add(data),
+    where(arg1:any, operand:string, arg2:any),
+  }
+}
+
+
+
 export const auth: any = firebase.auth()
-export const db: any = firebase.firestore()
+// @ts-ignore
+export const db: firebaseDb = firebase.firestore()
+db.collection('Posts').get().then(res => {
+
+  console.log(res)
+})
 export const functions: any = firebase.functions()
 export const storage: any = firebase.storage()
+
 
 functions.useEmulator("localhost", 5001);
