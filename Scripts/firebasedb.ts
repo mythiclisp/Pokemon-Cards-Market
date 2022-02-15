@@ -1,9 +1,8 @@
-import { forEach, indexOf } from 'lodash'
 import {db,auth} from './firebaseconfig'
 import { handleErrs, addPost } from './firebaseauth'
 import getDate from './dates'
 
-export const getPosts = (resolve: Function, reject: Function) => {
+export function getPost(resolve: Function, reject: Function) {
     const postsList = []
 
     db.collection('Posts').get().then(posts => {
@@ -253,7 +252,7 @@ export function getOrders(uid) {
 
                                     for (let x=0;x<postsList[0][i].length;x++) {
 
-                                        orderPrice += postsList[0][i][x].price
+                                        orderPrice += parseInt(postsList[0][i][x].price)
                                     }
 
                                     postsList[1][1].push(orderPrice)
