@@ -287,15 +287,3 @@ functions.https.onRequest(async (request:any, response:any) => {
   }
   return;
 });
-
-export const onNewOrder =
-functions.firestore.document("Orders/{docId}")
-.onCreate((snap:any, context:any) => {
-  admin.firestore().collection("Users").doc(snap.data().userId)
-  .get().then((res:any) => {
-    const data = res.data();
-    data.orders.push(context.params.docId);
-    admin.firestore().collection("Users").doc(snap.data().userId).set(data)
-  });
-  return;
-})
