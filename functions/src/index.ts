@@ -268,6 +268,7 @@ functions.https.onRequest(async (request:any, response:any) => {
       event.data.object.metadata.posts.split(",") :
       [event.data.object.metadata.posts],
       status: "Waiting for seller to ship",
+      createdAt: new Date(),
     }).then((response:any) => {
       admin.firestore().collection("Users")
       .doc(event.data.object.metadata.userId).get().then((res:any) => {

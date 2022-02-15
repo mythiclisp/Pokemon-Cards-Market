@@ -6,6 +6,7 @@ import { CheckCircleIcon } from '@heroicons/react/solid'
 import { getOrders } from '../Scripts/firebasedb'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth } from '../Scripts/firebaseconfig'
+import { returnRates } from '../Scripts/currency'
 
 
 
@@ -21,7 +22,7 @@ export default function Example() {
     let [orders, setOrders] = useState([])
 
     if (user) {
-    
+
     }
 
     useEffect(() => {
@@ -30,46 +31,53 @@ export default function Example() {
 
             getOrders(user.uid).then(res => {
 
+                let i = 0
+
                 res[0].forEach(order => {
 
                     const products = []
-                    
-                    let i = 0
+
                     order.forEach(post => {
 
                         products.push({
-                            id: i,
+                            id: post.id,
                             name: post.header,
                             description: post.description,
-                            href: '#',
-                            price: post.price,
+                            href: `/post/${post.id}`,
+                            price: post.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
                             imageSrc: post.image,
                             imageAlt: post.header,
                         })
                     })
 
-                    setOrders(orders = orders.concat(
-                        {
-                            number: 'WU88191111',
-                            href: '#',
-                            invoiceHref: '#',
-                            createdDate: 'Jul 6, 2021',
-                            createdDatetime: '2021-07-06',
-                            deliveredDate: 'July 12, 2021',
-                            deliveredDatetime: '2021-07-12',
-                            total: '$160.00',
-                            products: products.map(post => post),
-                        },
-                    ))
-                    i++
+                    returnRates(user).then((response:any) => {
+
+                        let price = parseFloat((Math.round((res[1][1][i] * response.rate) * 100) / 100 * 100).toString()) / 100
+
+                        console.log(res[1][2])
+                        setOrders(orders = orders.concat(
+
+                            {
+                                number: res[1][2][i],
+                                href: '#',
+                                invoiceHref: '#',
+                                createdDate: 'Jul 6, 2021',
+                                createdDatetime: '2021-07-06',
+                                deliveredDate: 'July 12, 2021',
+                                deliveredDatetime: '2021-07-12',
+                                total: `${response.symbol}${price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
+                                products: products.map(post => post),
+                            },
+                        ))
+                        i++
+                    })
                 })
-                
             })
         }
     }, [user])
-    
+
   return (<>
-  {orders ? 
+  {orders ?
     <>
       <div className="bg-white">
         <div className="py-16 sm:py-24">
@@ -237,7 +245,7 @@ export default function Example() {
             </div>
         </div>
       </div>
-    </> 
+    </>
     : null}
   </>
   )

@@ -327,14 +327,3 @@ export function reloadOrders() {
         })
     })
 }
-
-db.collection("Posts").get().then(res => {
-
-    res.forEach(post => {
-
-        const data = post.data()
-        data.createdAt = new Date().getTime()
-
-        db.collection("Posts").doc(post.id).set(data)
-    })
-})

@@ -28,6 +28,7 @@ export default async function getRates(currency:string) {
         }
     })
 }
+
 export async function returnRates(user) {
 
     return new Promise ((resolve, reject) => {

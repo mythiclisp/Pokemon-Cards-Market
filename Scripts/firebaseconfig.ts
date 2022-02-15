@@ -15,7 +15,7 @@ firebase.initializeApp({
 })
 
 interface docReturn {
-  
+
   data(): any,
   id: string,
   exists: boolean,
@@ -44,6 +44,7 @@ interface firebaseDb {
     get():Promise<collectionReturn>
     add(data),
     where(arg1:any, operand:string, arg2:any),
+    orderBy(arg1:string, order:string)
   }
 }
 

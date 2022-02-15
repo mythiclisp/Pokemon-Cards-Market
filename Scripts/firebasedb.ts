@@ -78,7 +78,8 @@ export async function addTemplatePosts(user) {
 
     let data = [
         {
-            createdAt: new Date(),
+            bought: false,
+            createdAt: new Date().getTime(),
             date: getDate(),
             description: 'Insert body',
             header: 'Charizard from 1999, mint condition and good price',
@@ -86,9 +87,11 @@ export async function addTemplatePosts(user) {
             price: '250',
             user: user.uid,
             userDisplayName: user.displayName,
-            condition: 'Mint condition'
+            condition: 'Mint condition',
+            views: 0
         }, {
-            createdAt: new Date(),
+            bought: false,
+            createdAt: new Date().getTime(),
             date: getDate(),
             description: 'Insert body',
             header: 'Blastoise GX - 35/214 - Near Mint - Pokemon Unbroken Bonds - Ultra Rare.',
@@ -96,9 +99,11 @@ export async function addTemplatePosts(user) {
             price: '11250',
             user: user.uid,
             userDisplayName: user.displayName,
-            condition: 'Near mint'
+            condition: 'Near mint',
+            views: 0,
         }, {
-            createdAt: new Date(),
+            bought: false,
+            createdAt: new Date().getTime(),
             date: getDate(),
             description: 'Insert body',
             header: 'Venusaur 15/102 PSA 9 Base Set Holo Pokemon Card. Condition is "Used". Shipped with USPS First Class.',
@@ -106,9 +111,11 @@ export async function addTemplatePosts(user) {
             price: '3250',
             user: user.uid,
             userDisplayName: user.displayName,
-            condition: 'Used'
+            condition: 'Used',
+            views: 0,
         }, {
-            createdAt: new Date(),
+            bought: false,
+            createdAt: new Date().getTime(),
             date: getDate(),
             description: 'Insert body',
             header: 'Rayquaza GX - 160/168 - Pokemon - Full Art - Ultra Rare - Sun & Moon - LP.',
@@ -116,7 +123,8 @@ export async function addTemplatePosts(user) {
             price: '1250',
             user: user.uid,
             userDisplayName: user.displayName,
-            condition: 'Used'
+            condition: 'Used',
+            views: 0,
         },
     ]
     for (let i=0;i<4;i++) {
@@ -184,7 +192,7 @@ export function getOrders(uid) {
     return new Promise((resolve, reject) => {
 
         let ordersList = []
-        let postsList = [[],[[],[]]]
+        let postsList = [[],[[],[],[]]]
 
         db.collection("Users").doc(uid).get().then(res => {
 
@@ -198,11 +206,12 @@ export function getOrders(uid) {
                 postsList[0].push([])
 
                 let order = ordersList[x]
+                postsList[1][2].push(order)
 
                 db.collection("Orders").doc(order).get().then(res => {
 
                     let postIdsList = res.data().posts
-                     postsList[1][0].push(res.data().status)
+                    postsList[1][0].push(res.data().status)
 
                     for (let i=0;i<postIdsList.length;i++) {
 
@@ -210,9 +219,31 @@ export function getOrders(uid) {
 
                         db.collection("Posts").doc(postId ? postId : 'akJyoW0U9TwAIrIAJLza').get().then(res => {
 
+
                             let data = res.data()
-                            data.id = postId
-                            postsList[0][x].push(data)
+                            try {
+
+                                Object.assign(data, {id: res.id})
+                                postsList[0][x].push(data)
+                            } catch(err) {
+
+                                postsList[0][x].push(
+                                    {
+                                        "userDisplayName":"Deleted",
+                                        "createdAt": 0,
+                                        "views":2,
+                                        "date":"Deleted",
+                                        "user":"Deleted",
+                                        "price":0,
+                                        "description":"Deleted",
+                                        "condition":"Deleted",
+                                        "header":"Deleted",
+                                        "image":"https://firebasestorage.googleapis.com/v0/b/pokemon-cards-market.appspot.com/o/Untitled.png?alt=media&token=96124d0a-83c0-4923-b714-6900ab1faebd",
+                                        "bought":false,
+                                        "id": `Deleted ${Math.random() * 100}`
+                                    }
+                                )
+                            }
 
                             if (i>=postIdsList.length-1 && x>=ordersList.length-1) {
 
