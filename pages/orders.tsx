@@ -1,14 +1,11 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment, useEffect, useMemo, useState } from 'react'
+import { Fragment, useMemo, useState } from 'react'
 import { Menu, Transition } from '@headlessui/react'
-import { DotsVerticalIcon } from '@heroicons/react/outline'
-import { CheckCircleIcon } from '@heroicons/react/solid'
+import { DotsVerticalIcon, ClockIcon } from '@heroicons/react/outline'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth, db } from '../Scripts/firebaseconfig'
 import { returnRates } from '../Scripts/currency'
-
-
-
+import Link from 'next/link'
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -18,34 +15,6 @@ interface currency {
     rate?: number,
     symbol?: string
 }
-
-const orders2 = [
-    {
-      number: 'WU88191111',
-      href: '#',
-      invoiceHref: '#',
-      createdDate: 'Jul 6, 2021',
-      createdDatetime: '2021-07-06',
-      deliveredDate: 'July 12, 2021',
-      deliveredDatetime: '2021-07-12',
-      total: '$160.00',
-      products: [
-        {
-          id: 1,
-          name: 'Micro Backpack',
-          description:
-            'Are you a minimalist looking for a compact carry option? The Micro Backpack is the perfect size for your essential everyday carry items. Wear it like a backpack or carry it like a satchel for all-day use.',
-          href: '#',
-          price: '$70.00',
-          imageSrc: 'https://tailwindui.com/img/ecommerce-images/order-history-page-03-product-01.jpg',
-          imageAlt:
-            'Moss green canvas compact backpack with double top zipper, zipper front pouch, and matching carry handle and backpack straps.',
-        },
-        // More products...
-      ],
-    },
-    // More orders...
-  ]
 
 export default function Example() {
 
@@ -58,16 +27,16 @@ export default function Example() {
         if (!user) return
 
         // Get user doc
-        let userRef = await db.collection("Users").doc(user.uid).get()
+        let userRef:any = await db.collection("Users").doc(user.uid).get()
 
         // Get all the user's orders
-        const orders = Promise.all(userRef.data().orders.map(order => db.collection("Orders").doc(order).get()))
+        const orders:any = Promise.all(userRef.data().orders.map(order => db.collection("Orders").doc(order).get()))
 
         // Get the posts in the orders
-        const posts =  Promise.all((await orders).map(order => Promise.all(order.data().posts.map(post => db.collection("Posts").doc(post).get()))))
+        const posts:any =  Promise.all((await orders).map(order => Promise.all(order.data().posts.map(post => db.collection("Posts").doc(post).get()))))
 
         // Get all the data in the posts
-        const orderData =  Promise.all((await posts).map(order => Promise.all(order.map(post => Object.assign(post.data(), {id: post.id})))))
+        const orderData = Promise.all((await posts).map(order => Promise.all(order.map(post => Object.assign(post.data(), {id: post.id})))))
 
         const resolvedOrders = (await orders)
 
@@ -76,28 +45,39 @@ export default function Example() {
         setCurrency(userCurrency = currency)
 
         // Format data into JSON, add order totals and status
-        const formatedOrderData = (await orderData).map((order, index) => (
+        const formatedOrderData = Promise.all((await orderData).map(async (order:any[], index) => (
             {
                 data: order,
-                orderTotal: `${currency.symbol}${Math.round((order.map(post => parseFloat(post.price)).reduce((a, b) => a + b, 0)) * currency.rate)}`,
-                orderId: resolvedOrders[index].id
+                orderTotal: `${currency.symbol}${Math.round((order.map(post => parseFloat(post.price)).reduce((a, b) => a + b, 0)) * currency.rate * 100) / 100}`.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
+                orderId: resolvedOrders[index].id,
+                orderTime: resolvedOrders[index].data().createdAt,
+                status: resolvedOrders[index].data().status
             }
-        ))
+        )))
 
         return formatedOrderData
     };
+
+    function toDateTime(secs:number) {
+        var t = new Date(1970, 0, 1); // Epoch
+        t.setSeconds(secs);
+        let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Nov", "Dec"]
+
+        let date = t.getUTCDate()
+        let month = months[t.getMonth()]
+        let year = t.getUTCFullYear()
+        return `${month} ${date-1}, ${year}`
+    }
 
     useMemo(() => {
 
         getOrders().then(res => {
 
             if (!res) return
-    
+
             setOrders(res)
         })
     }, [user])
-    
-    console.log(orders)
 
     return (
         <>
@@ -108,6 +88,9 @@ export default function Example() {
                         <h1 className="text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl">Order history</h1>
                         <p className="mt-2 text-sm text-gray-500">
                         Check the status of recent orders, manage returns, and discover similar products.
+                        </p>
+                        <p className="mt-2 text-sm text-gray-500">
+                            * Orders can take up to 5 minutes be processed
                         </p>
                     </div>
                     </div>
@@ -122,19 +105,19 @@ export default function Example() {
                             className="bg-white border-t border-b border-gray-200 shadow-sm sm:rounded-lg sm:border"
                             >
                             <h3 className="sr-only">
-                                Order placed on <time dateTime={'order.createdDatetime'}>{'order.createdDate'}</time>
+                                Order placed on {toDateTime(order.orderTime.seconds)}
                             </h3>
 
                             <div className="flex items-center p-4 border-b border-gray-200 sm:p-6 sm:grid sm:grid-cols-4 sm:gap-x-6">
-                                <dl className="flex-1 grid grid-cols-2 gap-x-6 text-sm sm:col-span-3 sm:grid-cols-3 lg:col-span-2">
+                                <dl className="flex-1 grid grid-cols-2 gap-x-6 text-sm sm:col-span-4 sm:grid-cols-3 lg:col-span-3">
                                 <div>
                                     <dt className="font-medium text-gray-900">Order number</dt>
-                                    <dd className="mt-1 text-gray-500">{'order.number'}</dd>
+                                    <dd className="mt-1 text-gray-500">{order.orderId}</dd>
                                 </div>
                                 <div className="hidden sm:block">
                                     <dt className="font-medium text-gray-900">Date placed</dt>
                                     <dd className="mt-1 text-gray-500">
-                                    <time dateTime={'order.createdDatetime'}>{'order.createdDate'}</time>
+                                        {toDateTime(order.orderTime.seconds)}
                                     </dd>
                                 </div>
                                 <div>
@@ -192,23 +175,6 @@ export default function Example() {
                                     </Menu.Items>
                                 </Transition>
                                 </Menu>
-
-                                <div className="hidden lg:col-span-2 lg:flex lg:items-center lg:justify-end lg:space-x-4">
-                                <a
-                                    href={'order.href'}
-                                    className="flex items-center justify-center bg-white py-2 px-2.5 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                >
-                                    <span>View Order</span>
-                                    <span className="sr-only">{order.orderId}</span>
-                                </a>
-                                <a
-                                    href={'order.invoiceHref'}
-                                    className="flex items-center justify-center bg-white py-2 px-2.5 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                >
-                                    <span>View Invoice</span>
-                                    <span className="sr-only">for order {order.orderId}</span>
-                                </a>
-                                </div>
                             </div>
 
                             {/* Products */}
@@ -227,7 +193,7 @@ export default function Example() {
                                     <div className="flex-1 ml-6 text-sm">
                                         <div className="font-medium text-gray-900 sm:flex sm:justify-between">
                                         <h5>{product.header}</h5>
-                                        <p className="mt-2 sm:mt-0">{`${userCurrency.symbol}${Math.round(parseFloat(product.price) * userCurrency.rate * 100) / 100}`}</p>
+                                        <p className="mt-2 sm:mt-0">{`${userCurrency.symbol}${Math.round(parseFloat(product.price) * userCurrency.rate * 100) / 100}`.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</p>
                                         </div>
                                         <p className="hidden text-gray-500 sm:block sm:mt-2">{product.description}</p>
                                     </div>
@@ -235,25 +201,26 @@ export default function Example() {
 
                                     <div className="mt-6 sm:flex sm:justify-between">
                                     <div className="flex items-center">
-                                        <CheckCircleIcon className="w-5 h-5 text-green-500" aria-hidden="true" />
+                                        <ClockIcon className="w-5 h-5 text-gray-500" aria-hidden="true" />
                                         <p className="ml-2 text-sm font-medium text-gray-500">
-                                        Delivered on <time dateTime={'order.deliveredDatetime'}>{'order.deliveredDate'}</time>
+                                        {order.status}
                                         </p>
                                     </div>
 
                                     <div className="mt-6 border-t border-gray-200 pt-4 flex items-center space-x-4 divide-x divide-gray-200 text-sm font-medium sm:mt-0 sm:ml-4 sm:border-none sm:pt-0">
                                         <div className="flex-1 flex justify-center">
                                         <a
-                                            href={`/user/${product.user}`}
+                                            href={`/post/${product.id}`}
                                             className="text-indigo-600 whitespace-nowrap hover:text-indigo-500"
                                         >
                                             View product
                                         </a>
                                         </div>
                                         <div className="flex-1 pl-4 flex justify-center">
-                                        <a href="#" className="text-indigo-600 whitespace-nowrap hover:text-indigo-500">
+                                        {/* @ts-ignore */}
+                                        <Link href="#" className="text-indigo-600 whitespace-nowrap hover:text-indigo-500">
                                             Buy again
-                                        </a>
+                                        </Link>
                                         </div>
                                     </div>
                                     </div>

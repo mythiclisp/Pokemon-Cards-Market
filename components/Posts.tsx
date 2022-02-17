@@ -4,7 +4,7 @@ import React, { useState  } from 'react'
 import Post from './Post'
 import { useEffect } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
-import { getCart, getOrders } from '../Scripts/firebasedb'
+import { getCart } from '../Scripts/firebasedb'
 import { returnRates } from '../Scripts/currency'
 
 export default function Posts(props) {
@@ -68,35 +68,6 @@ export default function Posts(props) {
             getCart(authUser).then((res:any) => {
 
                 setCartPosts(res)
-            })
-        }
-        if (props.orders) {
-
-            getOrders(authUser.uid).then(res => {
-
-                let ordersList = []
-
-                for (let i=0;i<res[0].length;i++) {
-
-                    returnRates(auth.currentUser).then((response:any) => {
-
-                        let calcPrice = Math.round(response.rate * parseFloat((Math.round(res[1][1][i] * 100)/100 * 100).toString()) /100)
-                        const symbol = response.symbol
-
-                        let order = res[0][i]
-                        ordersList.push(props.orders ? order &&
-                        <>
-                            <h2 className='my-10'>Order {i+1}</h2>
-                            <h1 className="text-slate-600">{`Order Status: ${res[1][0][i]}`}</h1>
-                            <h1 className="text-slate-600">{`Total Price: ${symbol}${calcPrice}`.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</h1>
-                            <div className='mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8'>
-                                {order.map((post, index) => <Post key={index} order={true} index={index} postId={post.id} data={post}/>)}
-                            </div>
-                        </> : null)
-
-                        setOrderPosts(<div className='mt-6 grid grid-cols-1'>{ordersList}</div>)
-                    })
-                }
             })
         }
     }, [authUser])

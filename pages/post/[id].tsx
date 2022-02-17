@@ -11,7 +11,7 @@ export default function Example() {
 
 
     const { query } = useRouter();
-    const { id } = query;
+    const { id }:any = query;
 
     const [postId] = useState(id)
 
@@ -84,7 +84,7 @@ export default function Example() {
     }
 
     useEffect(() => {
-        
+
         if (id && !viewed) {
 
             setViewed(viewed = true)
@@ -96,7 +96,7 @@ export default function Example() {
                     const data = res.data()
                     data.views += 1
                     db.collection("Posts").doc(id).set(data)
-    
+
                     localStorage.setItem(id.toString(), Math.round(new Date().getTime() / 1000).toString())
                     console.log(data)
                 })
@@ -109,7 +109,7 @@ export default function Example() {
                     const data = res.data()
                     data.views += 1
                     db.collection("Posts").doc(id).set(data)
-    
+
                     localStorage.setItem(id.toString(), Math.round(new Date().getTime() / 1000).toString())
                 })
             } else {

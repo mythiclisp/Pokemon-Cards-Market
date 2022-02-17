@@ -12,6 +12,16 @@ export default function Cart() {
     let checkout = useRef(null)
 
 
+    const madTing = functions.httpsCallable('madTing')
+    if (madTing) {
+
+        madTing().then(res => {
+
+            console.log(res)
+        })
+    }
+
+
     function handleCheckout(e) {
 
         checkout.current.innerHTML = 'Loading Checkout'

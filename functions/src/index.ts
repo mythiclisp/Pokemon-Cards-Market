@@ -235,6 +235,7 @@ functions.https.onCall(async (data:any, context:any) => {
         },
       ]),
   });
+
   return (session ?
     {id: session.id} :
     "no res");
@@ -249,7 +250,7 @@ functions.https.onRequest(async (request:any, response:any) => {
       functions.config().stripe.payments_webhook_secret,
     );
   } catch (err) {
-    response.sendStatus(200);
+    response.sendStatus(400);
   }
 
   if (event.type === "payment_intent.succeeded") {
@@ -280,10 +281,5 @@ functions.https.onRequest(async (request:any, response:any) => {
     });
   }
 
-  switch (event.type) {
-    default:
-      // Unexpected event type
-      console.log(`Unhandled event type ${event.type}.`);
-  }
-  return;
+  return response.sendStatus(200);
 });

@@ -85,7 +85,10 @@ export default function Nav() {
                                     {({ active }) => (
                                         <a
                                         href="#"
-                                        className={'text-gray-700 block px-4 py-2 text-sm'}
+                                        className={classNames(
+                                            active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                                            'block px-4 py-2 text-sm'
+                                        )}
                                         onClick={() => openModal('modal-account')}
                                         >
                                         Account settings
@@ -94,22 +97,42 @@ export default function Nav() {
                                     </Menu.Item>
                                     <Menu.Item>
                                     {({ active }) => (
-                                        <a
-                                        href="/orders"
-                                        className={'text-gray-700 block px-4 py-2 text-sm'}
-                                        >
-                                        Orders
-                                        </a>
+                                        <div className={classNames(
+                                            active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                                            'block text-sm'
+                                        )}>
+                                        <Link href="/orders">
+                                            <a
+                                            href="/cart"
+                                            className={classNames(
+                                                active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                                                'block px-4 py-2 text-sm'
+                                            )}
+                                            >
+                                                Cart
+                                            </a>
+                                        </Link>
+                                        </div>
                                     )}
                                     </Menu.Item>
                                     <Menu.Item>
                                     {({ active }) => (
-                                        <a
-                                        href="/cart"
-                                        className={'text-gray-700 block px-4 py-2 text-sm'}
-                                        >
-                                        Shopping Cart
-                                        </a>
+                                        <div className={classNames(
+                                            active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                                            'block text-sm'
+                                        )}>
+                                            <Link href="/orders">
+                                                <a
+                                                href="/orders"
+                                                className={classNames(
+                                                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                                                    'block px-4 py-2 text-sm'
+                                                )}
+                                                >
+                                                    Orders
+                                                </a>
+                                            </Link>
+                                        </div>
                                     )}
                                     </Menu.Item>
                                     <Menu.Item>
