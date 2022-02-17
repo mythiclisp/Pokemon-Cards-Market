@@ -142,7 +142,8 @@ export function logIn(e: any) {
 export const createPost = async (e: any) => {
 
     //Putting post image in storage bucket
-    const postImage = e.target.parentNode['post-image'].files[0]
+    console.log(e.target.parentNode.children[3].children[0].files[0])
+    const postImage = e.target.parentNode.children[3].children[0].files[0]
     const storageRef = storage.ref()
     const fileRef = storageRef.child(postImage.name)
     await fileRef.put(postImage)

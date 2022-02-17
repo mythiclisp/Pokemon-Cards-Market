@@ -209,12 +209,16 @@ export default function Example() {
 
                                     <div className="mt-6 border-t border-gray-200 pt-4 flex items-center space-x-4 divide-x divide-gray-200 text-sm font-medium sm:mt-0 sm:ml-4 sm:border-none sm:pt-0">
                                         <div className="flex-1 flex justify-center">
-                                        <a
+                                        <Link
                                             href={`/post/${product.id}`}
-                                            className="text-indigo-600 whitespace-nowrap hover:text-indigo-500"
                                         >
-                                            View product
-                                        </a>
+                                            <a
+                                            href="#"
+                                            className="text-indigo-600 whitespace-nowrap hover:text-indigo-500"
+                                            >
+                                                View Product
+                                            </a>
+                                        </Link>
                                         </div>
                                         <div className="flex-1 pl-4 flex justify-center">
                                         {/* @ts-ignore */}
