@@ -1,7 +1,7 @@
 import styles from '../css/Layout.module.css'
 import Nav from './Nav'
 import Modals from './Modals/modals.jsx'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import loadAnimation from '../Scripts/Animations/main'
 import SearchBar from './SearchBar'
 import BreadCrumbs from './breadCrumbs'

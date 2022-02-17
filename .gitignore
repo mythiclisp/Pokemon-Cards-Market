@@ -39,4 +39,12 @@ yarn-error.log*
 #VSCode setting file
 /.vscode/
 
+#Firebase
+/.firebase/
+ui-debug.log
+firebase-debug.log
+firbase-debug 2.log
+firestore-debug.log
+firestore-debug 2.log
+
 manifest
