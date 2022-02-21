@@ -1,4 +1,3 @@
-/* This example requires Tailwind CSS v2.0+ */
 import { Fragment, useMemo, useState } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { DotsVerticalIcon, ClockIcon } from '@heroicons/react/outline'

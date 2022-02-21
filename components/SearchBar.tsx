@@ -1,25 +1,37 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import SearchIcon from "@material-ui/icons/Search";
 import { XIcon } from "@heroicons/react/solid";
 
-export default function SearchBar({ placeholder, data }) {
 
-  const [filteredData, setFilteredData] = useState([1]);
-  const [wordEntered, setWordEntered] = useState("");
 
-  function filterData(e) { 
-    
-    console.log(e.target.value)
-  }
+export default function SearchBar({ placeholder}) {
+
+  const [filteredData, setFilteredData] = useState([]);
+  const [focused, setFocused] = useState(false)
+  const searchBar = useRef(null)
+
+  useEffect(() => {
+
+    window.addEventListener("keydown", e => {
+
+      if (e.key === "Enter" && focused && searchBar) {
+
+        window.open(`/search/${searchBar.current.value}`, '_self')
+      }
+    })
+  })
 
   return (
     <>
-      <div className="w-64 grid grid-flow-col place-items-center rounded-lg border-gray-300 border-2 px-5 py-3 m-64">
-        <input type="text" className="h-full w-full" placeholder={placeholder} onChange={filterData} />
-        {filterData.length > 1 ? 
-        'X' :
-        <SearchIcon />
-        }
+      <div className="grid grid-flow-col place-items-center rounded-lg border-gray-300 border-2 px-5 py-3">
+        <input
+        type="text"
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        className="h-full w-full"
+        placeholder={placeholder}
+        ref={searchBar}
+        />
       </div>
     </>
   )

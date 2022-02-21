@@ -197,7 +197,6 @@ export function deleteCartItem(index, user) {
     })
 }
 
-
 db.collection("Posts").get().then(res => {
 
     res.forEach(post => {

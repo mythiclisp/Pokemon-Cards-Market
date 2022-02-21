@@ -4,6 +4,7 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { deletePosts, addTemplatePosts } from '../Scripts/firebasedb'
 import Posts from '../components/Posts'
 import { reloadOrders } from '../Scripts/firebaseauth'
+import SearchBar from '../components/SearchBar'
 
 export default function Home() {
 

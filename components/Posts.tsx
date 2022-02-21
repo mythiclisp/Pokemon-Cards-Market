@@ -89,7 +89,14 @@ export default function Posts(props) {
             else if (props.trending) {
 
                 return trendingPosts.map(post => <Post key={post.id} postId={post.id} data={post}/>)
-            } else {
+            }
+
+            else if (props.search) {
+
+                return props.searchData.map(post => <Post key={post.id} postId={post.id} data={post}/>)
+            }
+
+            else {
 
                 return posts &&
                 (!props.orderBy ?

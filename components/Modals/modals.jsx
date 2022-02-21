@@ -4,6 +4,7 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth } from '../../Scripts/firebaseconfig'
 import setLocalStorage from '../../Scripts/Cache/localStorage'
 import {sendPasswordReset, changeDisplayName, createPost, changeCurrency} from '../../Scripts/firebaseauth'
+import SearchBar from '../SearchBar'
 
 const Modals = () => {
 
@@ -263,6 +264,17 @@ const Modals = () => {
                             </div>
                             <button className='btn yellow darken-2 z-depth-0' onClick={createPost}>Post</button>
                         </form>
+                    </div>
+                </div>
+                {/* Search modal */}
+                <div id="modal-search" className="modal rounded-lg">
+                    <div className="modal-content">
+                        <h1 className='grid place-items-center my-10 w-full'>
+                            <span className='text-lg'>Search</span>
+                        </h1>
+                        <div className="lg:mx-32 md:mx-16 sm:mx-10 ">
+                            <SearchBar placeholder='Find Cards...' />
+                        </div>
                     </div>
                 </div>
             </>

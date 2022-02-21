@@ -13,6 +13,7 @@ export interface collectionReturn {
     query: string,
     size: number,
     forEach(index),
+    map()
 }
 
 export interface firebaseDb {
@@ -25,7 +26,7 @@ export interface firebaseDb {
         delete(),
       },
 
-      get():Promise<collectionReturn>
+      get():Promise<any>
       add(data),
       where(arg1:any, operand:string, arg2:any),
       orderBy(arg1:string, order:string)
